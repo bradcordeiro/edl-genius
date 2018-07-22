@@ -1,27 +1,35 @@
 const fs = require('fs');
+const readline = require('readline');
 const RegexPatterns = require('../common/RegexPatterns');
 const Event = require('../Event/Event');
 
 class EDL {
-  constructor(inputFile) {
+  constructor() {
     this.events = [];
-    this.currentEvent = {};
+  }
 
-    const lines = fs.readFileSync(inputFile, { encoding: 'utf8' }).split(/[\n\r]/);
+  async read(inputFile) {
+    let currentEvent = {};
 
-    lines.forEach((line) => {
+    const rl = readline.createInterface({
+      input: fs.createReadStream(inputFile),
+    });
+
+    rl.on('line', (line) => {
       if (RegexPatterns.CMX_EVENT_REGEX.test(line)) {
-        if (Object.prototype.hasOwnProperty.call(this.currentEvent, 'number')) this.events.push(this.currentEvent);
-        this.currentEvent = new Event(line);
+        if (Object.prototype.hasOwnProperty.call(currentEvent, 'number')) this.events.push(currentEvent);
+        currentEvent = new Event(line);
       } else if (RegexPatterns.CMX_MOTION_EFFECT_REGEX.test(line)) {
-        this.currentEvent.setMotionEffect(line);
+        currentEvent.setMotionEffect(line);
       } else if (RegexPatterns.CMX_COMMENT_REGEX.test(line)) {
-        this.currentEvent.addComment(line);
+        currentEvent.addComment(line);
       }
     });
 
-    this.events.push(this.currentEvent);
-    delete this.currentEvent;
+    rl.on('close', () => {
+      this.events.push(currentEvent);
+      return this;
+    });
   }
 }
 
