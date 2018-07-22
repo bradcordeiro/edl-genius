@@ -81,7 +81,36 @@ This package was written using the [Airbnb Style Guide](https://github.com/airbn
 
 ## Api Reference
 
-In progress.
+The goal of this module is really just to get information out of a text EDL and into JavaScript native data types. Each class defined by this module is really just object storage, with methods to get the information into those objects.
+
+#### EDL Class
+
+Constructor |
+----------- |
+new EDL(frameRate : Number) |
+Returns an empty EDL, with its record frame rate set to the argument. The record frame rate defaults to 29.97 (a.k.a. 30 drop-frame) if omitted. The record frame rate is the frame rate of the sequence the EDL represents, as opposed to the frame rate of the source material in it, which is parsed by this package. |
+
+##### Properties
+
+Property | Type | Description
+------ | ------------- | -----------
+frameRate | Number | The record frame rate (i.e. the frame rate of the video sequence the EDL describes)
+events | [Event] | An array of Events found in the EDL. (See Event class description below)
+
+##### Methods
+
+Method | Argument Type | Return Type
+------ | ------------- | -----------
+read(*file*) | String | Promise
+
+Reads the file at the passed location asynchronously, and stores the found EDL Events in the EDL object's *events* property. The return value's Promise Resolver is given the EDL object as its argument.
+
+#### Event Class
+
+Constructor |
+----------- |
+new Event(input : String, sourceFrameRate : Number, recordFrameRate : Number) |
+Parses the passed string into class properties, using the sourceFrameRate for source timecodes and recordFrameRate for record timecodes. If called with no arguments, an empty Event is created, whose properties can be set manually. IF no sourceFrameRate or recordFrameRate are passed, they default to 29.97. |
 
 ## Licensing
 
