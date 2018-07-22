@@ -61,7 +61,7 @@ This package uses [Semantic Versioning](https://semver.org).
 
 ## Tests
 
-The goal is to have 100% test coverage of all edge cases. Tough when you're dealing with EDLs, a text exchange format that some vendors deviate from. I would be grateful for test-only pull requests.
+The goal is to have 100% test coverage of all edge cases. Tough when you're dealing with EDLs, a text exchange format that some vendors deviate from. All pull requests are welcome, and if you'd like to submit a pull request with additional tests, without changing the package code, that's totally cool.
 
 ```shell
 npm test
@@ -79,9 +79,11 @@ To get a code coverage report.
 
 This package was written using the [Airbnb Style Guide](https://github.com/airbnb/javascript). An [.eslintrc.json] file is included in source control, and [ESLint](https://eslint.org) as well as the [Airbnb plugin](https://www.npmjs.com/package/eslint-config-airbnb) are included as development dependencies.
 
-## Api Reference
+## API Reference
 
 The goal of this module is really just to get information out of a text EDL and into JavaScript native data types. Each class defined by this module is really just object storage, with methods to get the information into those objects.
+
+Timecode objects are created using [timecode-boss](https://github.com/bradcordeiro/timecode-boss/) module, which I also wrote. You can check its repository for its API. A common method of Timecode objects you'll probably want to use is *toString()*.
 
 #### EDL Class
 
@@ -92,7 +94,7 @@ Returns an empty EDL, with its record frame rate set to the argument. The record
 
 ##### Properties
 
-Property | Type | Description
+Name | Type | Description
 ------ | ------------- | -----------
 frameRate | Number | The record frame rate (i.e. the frame rate of the video sequence the EDL describes)
 events | [Event] | An array of Events found in the EDL. (See Event class description below)
@@ -111,6 +113,57 @@ Constructor |
 ----------- |
 new Event(input : String, sourceFrameRate : Number, recordFrameRate : Number) |
 Parses the passed string into class properties, using the sourceFrameRate for source timecodes and recordFrameRate for record timecodes. If called with no arguments, an empty Event is created, whose properties can be set manually. IF no sourceFrameRate or recordFrameRate are passed, they default to 29.97. |
+
+##### Properties
+
+For clarity, here is an example event that EDL could parse:
+
+```
+004  QEVL1GRN V2    C        01:31:44:03 01:31:44:12 01:00:02:24 01:00:03:01
+M2   QEVL1GRN       037.5                01:31:44:03
+* GETTY IMAGES__QEVL1GRND130_UNDERGROUND_EL CHAPO TUNNELS_INTERIOR OF ALCATRAZ PRI
+* SON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302
+* SOURCE FILE: QEVL1GRND130.MOV
+* FROM CLIP NAME:  QEVL1GRND130.NEW.01
+```
+
+Name | Type | Description | Example (referencing above event)
+---- | ---- | ----------- | ---------------------------------
+number | Number | The event number of the event in the EDL | 4 |
+reel | String | A short (generally 8 character) name of the source clip. | QEVL1GRN |
+trackType | String | A single character for the type of track (*V* for video, *A* for audio). | V |
+trackNumber | Number | A track number, for EDLs that describe multi-track sequences. | 2 |
+transition | String | A transition type, generally *C* for a cut, or *W000* for another transition.  | C |
+sourceStart | Timecode | The start of the source clip for the event. | 01:31:44:03 |
+sourceEnd | Timecode | The end of the source clip for the event. | 01:31:44:12 |
+recordStart | Timecode | The start of the clip's position in the sequence | 01:00:02:24 |
+recordEnd | Timecode | The end of the clip's position in the sequence | 01:00:03:01 |
+motionEffect | MotionEffect | Any speed-change applied to the clip (see MotionEffect class below) | { reel: 'QEVL1GRN', speed: 37.5, entryPoint: 01:31:44:03 } |
+sourceFile | String | The source file name for the source clip | QEVL1GRND130.MOV |
+sourceClip | String | The clip name from the editing system that generated the EDL | QEVL1GRND130.NEW.01 |
+comment | String | Any miscellaneous comments added to the event in the EDL | GETTY IMAGES__QEVL1GRND130_UNDERGROUND_EL CHAPO TUNNELS_INTERIOR OF ALCATRAZ PRISON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302 |
+
+#### MotionEffect Class
+
+Constructor |
+----------- |
+new MotionEffect(input : String) |
+Parses the passed string into class properties. If called with no arguments, an empty MotionEffect is created, whose properties can be set manually. |
+
+For clarity, here is an example motion effect that EDL could parse (this is also in the Event example above):
+
+```
+M2   QEVL1GRN       037.5                01:31:44:03
+```
+
+##### Properties
+
+Name | Type | Description | Example (referencing above event)
+---- | ---- | ----------- | ---------------------------------
+reel | String | A short source reference for the clip | 'QEVL1GRN' |
+speed | Number | The frame rate at which the source clip is to be played | 37.5 |
+entryPoint | Timecode | The start time of the source clip being effected | 01:31:44:03
+
 
 ## Licensing
 
