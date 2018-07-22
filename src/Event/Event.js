@@ -3,7 +3,7 @@ const RegexPatterns = require('../common/RegexPatterns');
 const MotionEffect = require('../MotionEffect/MotionEffect');
 const commentParser = require('../commentParser/commentParser');
 
-function parseCMXEvent(input, frameRate) {
+function parseCMXEvent(input, sourceFrameRate, recordFrameRate) {
   const [,
     number,
     reel,
@@ -25,10 +25,10 @@ function parseCMXEvent(input, frameRate) {
     reel,
     trackType,
     transition,
-    sourceStart: new Timecode(sourceStart, frameRate),
-    sourceEnd: new Timecode(sourceEnd, frameRate),
-    recordStart: new Timecode(recordStart, frameRate),
-    recordEnd: new Timecode(recordEnd, frameRate),
+    sourceStart: new Timecode(sourceStart, sourceFrameRate),
+    sourceEnd: new Timecode(sourceEnd, sourceFrameRate),
+    recordStart: new Timecode(recordStart, recordFrameRate),
+    recordEnd: new Timecode(recordEnd, recordFrameRate),
   };
 
   if (tn) obj.trackNumber = parseInt(tn, 10);
@@ -37,12 +37,11 @@ function parseCMXEvent(input, frameRate) {
 }
 
 class Event {
-  constructor(input, frameRate) {
+  constructor(input, sourceFrameRate, recordFrameRate) {
     let parsedEvent;
-    const fps = frameRate || 29.97;
 
     if (typeof input === 'string') {
-      parsedEvent = this.parse(input, fps);
+      parsedEvent = this.parse(input, sourceFrameRate, recordFrameRate);
     } else if (typeof input === 'object') {
       parsedEvent = input;
     } else {
@@ -50,12 +49,12 @@ class Event {
     }
 
     Object.assign(this, parsedEvent);
-    this.convertTimecodeProperties(fps);
+    this.convertTimecodeProperties(sourceFrameRate, recordFrameRate);
   }
 
-  parse(input, frameRate) {
+  parse(input, sourceFrameRate, recordFrameRate) {
     if (RegexPatterns.CMX_EVENT_REGEX.test(input)) {
-      Object.assign(this, parseCMXEvent(input, frameRate));
+      Object.assign(this, parseCMXEvent(input, sourceFrameRate, recordFrameRate));
     } else {
       throw new TypeError('Invalid EDL Event string');
     }
@@ -78,18 +77,18 @@ class Event {
     }
   }
 
-  convertTimecodeProperties(frameRate) {
+  convertTimecodeProperties(sourceFrameRate, recordFrameRate) {
     if (this.sourceStart && !(this.sourceStart instanceof Timecode)) {
-      this.sourceStart = new Timecode(this.sourceStart, frameRate);
+      this.sourceStart = new Timecode(this.sourceStart, sourceFrameRate);
     }
     if (this.sourceEnd && !(this.sourceEnd instanceof Timecode)) {
-      this.sourceEnd = new Timecode(this.sourceEnd, frameRate);
+      this.sourceEnd = new Timecode(this.sourceEnd, sourceFrameRate);
     }
     if (this.recordStart && !(this.recordStart instanceof Timecode)) {
-      this.recordStart = new Timecode(this.recordStart, frameRate);
+      this.recordStart = new Timecode(this.recordStart, recordFrameRate);
     }
     if (this.recordEnd && !(this.recordEnd instanceof Timecode)) {
-      this.recordEnd = new Timecode(this.recordEnd, frameRate);
+      this.recordEnd = new Timecode(this.recordEnd, recordFrameRate);
     }
   }
 }
