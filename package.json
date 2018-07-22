@@ -2,10 +2,10 @@
   "name": "edl-genius",
   "version": "1.0.0",
   "description": "An ES6 module to work with Edit Decision Lists",
-  "main": "index.js",
+  "main": "./src/EDL/EDL.js",
   "scripts": {
     "test": "mocha",
-    "test-coverage": "nyc --reporter=text mocha"
+    "test-coverage": "nyc mocha && nyc report --reporter=text-lcov | coveralls"
   },
   "author": {
     "name": "Brad Cordeiro",
@@ -17,6 +17,7 @@
     "timecode-boss": "^1.0.0"
   },
   "devDependencies": {
+    "coveralls": "^3.0.2",
     "eslint": "^4.19.1",
     "eslint-config-airbnb-base": "^13.0.0",
     "eslint-plugin-import": "^2.13.0",
