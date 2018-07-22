@@ -1,6 +1,6 @@
 {
   "name": "edl-genius",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An ES6 module to work with Edit Decision Lists",
   "main": "./src/EDL/EDL.js",
   "scripts": {
