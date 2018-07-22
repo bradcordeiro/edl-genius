@@ -3,6 +3,12 @@ const assert = require('assert');
 const EDL = require('./EDL');
 
 describe('EDL Class', () => {
+  it('Should use a default frame rate of 29.97 if constructed with no arguments', () => {
+    const edl = new EDL();
+
+    assert.strictEqual(edl.frameRate, 29.97);
+  });
+
   it('Should find 9 events in test file "cmx3600.edl"', async () => {
     const edl = await new EDL(29.97).read('./test/edl_files/cmx3600.edl');
     assert.strictEqual(edl.events.length, 9);

@@ -4,6 +4,12 @@ const Timecode = require('timecode-boss');
 const Event = require('./Event');
 
 describe('Event Class', () => {
+  it('Should allow creation of empty Event when constructed with no arguments', () => {
+    const event = new Event();
+
+    assert.strictEqual(event.number, undefined);
+  });
+
   it('Should parse a string into properties', () => {
     const event = new Event('003  BOONE_SM V     C        01:01:43:05 01:01:57:00 01:00:07:26 01:00:21:21');
 
@@ -73,5 +79,13 @@ describe('Event Class', () => {
     event.addComment('* AZ ISLAND _622-21 ');
 
     assert.strictEqual(event.comment, 'GETTY__QEVL1ESCP001_GREAT ESCAPES_MECKLENBURG SIX_AERIAL AROUND PRISON ON ALCATRAZ ISLAND _622-21');
+  });
+
+  it('Should throw a TypeError when a non-string, non-object is passed to the constructor', () => {
+    assert.throws(() => new Event(5), TypeError);
+  });
+
+  it('Should throw a TypeError when an invalid event string is passed', () => {
+    assert.throws(() => new Event('blagfodot'));
   });
 });

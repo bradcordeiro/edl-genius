@@ -38,18 +38,20 @@ function parseCMXEvent(input, sourceFrameRate, recordFrameRate) {
 
 class Event {
   constructor(input, sourceFrameRate, recordFrameRate) {
-    let parsedEvent;
+    if (input) {
+      let parsedEvent;
 
-    if (typeof input === 'string') {
-      parsedEvent = this.parse(input, sourceFrameRate, recordFrameRate);
-    } else if (typeof input === 'object') {
-      parsedEvent = input;
-    } else {
-      throw new TypeError('Event must be created from an Object or String.');
+      if (typeof input === 'string') {
+        parsedEvent = this.parse(input, sourceFrameRate, recordFrameRate);
+      } else if (typeof input === 'object') {
+        parsedEvent = input;
+      } else {
+        throw new TypeError('Event must be created from an Object or String.');
+      }
+
+      Object.assign(this, parsedEvent);
+      this.convertTimecodeProperties(sourceFrameRate, recordFrameRate);
     }
-
-    Object.assign(this, parsedEvent);
-    this.convertTimecodeProperties(sourceFrameRate, recordFrameRate);
   }
 
   parse(input, sourceFrameRate, recordFrameRate) {
