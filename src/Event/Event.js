@@ -1,7 +1,27 @@
 const Timecode = require('timecode-boss');
 const RegexPatterns = require('../common/RegexPatterns');
 const MotionEffect = require('../MotionEffect/MotionEffect');
-const commentParser = require('../commentParser/commentParser');
+
+function parseCMXComment(input) {
+  if (!RegexPatterns.CMX_COMMENT_REGEX.test(input)) return undefined;
+
+  if (RegexPatterns.CMX_SOURCE_FILE_REGEX.test(input)) {
+    const [, sourceFile] = RegexPatterns.CMX_SOURCE_FILE_REGEX.exec(input);
+    return {
+      sourceFile: sourceFile.trim(),
+    };
+  }
+
+  if (RegexPatterns.CMX_SOURCE_CLIP_REGEX.test(input)) {
+    const [, sourceClip] = RegexPatterns.CMX_SOURCE_CLIP_REGEX.exec(input);
+    return {
+      sourceClip: sourceClip.trim(),
+    };
+  }
+
+  const [, comment] = RegexPatterns.CMX_COMMENT_REGEX.exec(input);
+  return { comment };
+}
 
 function parseCMXEvent(input, sourceFrameRate, recordFrameRate) {
   const [,
@@ -39,10 +59,14 @@ function parseCMXEvent(input, sourceFrameRate, recordFrameRate) {
 class Event {
   constructor(input, sourceFrameRate, recordFrameRate) {
     if (input) {
+      this.sourceFrameRate = sourceFrameRate || 29.97;
+      this.recordFrameRate = recordFrameRate || 29.97;
+
+
       let parsedEvent;
 
       if (typeof input === 'string') {
-        parsedEvent = this.parse(input, sourceFrameRate, recordFrameRate);
+        parsedEvent = this.parse(input, this.sourceFrameRate, this.recordFrameRate);
       } else if (typeof input === 'object') {
         parsedEvent = input;
       } else {
@@ -50,24 +74,28 @@ class Event {
       }
 
       Object.assign(this, parsedEvent);
-      this.convertTimecodeProperties(sourceFrameRate, recordFrameRate);
+      this.convertTimecodeProperties(this.sourceFrameRate, this.recordFrameRate);
     }
   }
 
   parse(input, sourceFrameRate, recordFrameRate) {
     if (RegexPatterns.CMX_EVENT_REGEX.test(input)) {
       Object.assign(this, parseCMXEvent(input, sourceFrameRate, recordFrameRate));
-    } else {
-      throw new TypeError('Invalid EDL Event string');
     }
   }
 
   setMotionEffect(input) {
-    this.motionEffect = new MotionEffect(input);
+    try {
+      this.motionEffect = new MotionEffect(input);
+    } catch (TypeError) {
+      // do nothing, no motionEffect is set
+    }
   }
 
   addComment(input) {
-    const parsedComment = commentParser(input);
+    if (!RegexPatterns.CMX_COMMENT_REGEX.test(input)) return;
+
+    const parsedComment = parseCMXComment(input);
     if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceFile')) {
       this.sourceFile = parsedComment.sourceFile;
     } else if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceClip')) {

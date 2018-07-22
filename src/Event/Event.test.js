@@ -4,13 +4,13 @@ const Timecode = require('timecode-boss');
 const Event = require('./Event');
 
 describe('Event Class', () => {
-  it('Should allow creation of empty Event when constructed with no arguments', () => {
+  it('new Event() should create an empty event', () => {
     const event = new Event();
 
     assert.strictEqual(event.number, undefined);
   });
 
-  it('Should parse a string into properties', () => {
+  it('new Event(CMXstring) should parse to Event properties', () => {
     const event = new Event('003  BOONE_SM V     C        01:01:43:05 01:01:57:00 01:00:07:26 01:00:21:21');
 
     assert.strictEqual(event.number, 3);
@@ -23,7 +23,7 @@ describe('Event Class', () => {
     assert.strictEqual(event.recordEnd.toString(), '01;00;21;21');
   });
 
-  it('Should assign object properties to itself', () => {
+  it('new Event({Object}) should copy argument\'s properties to Event', () => {
     const event = new Event({
       number: 3,
       reel: 'BOONE_SM',
@@ -45,7 +45,7 @@ describe('Event Class', () => {
     assert.strictEqual(event.recordEnd.toString(), '01;00;21;21');
   });
 
-  it('Should assign object properties to itself, and convert string timecode to Timecode class', () => {
+  it('new Event({Object}) with Timecode string properties should convert Timecode strings to Timecode class) ', () => {
     const event = new Event({
       sourceStart: '01:01:43:05',
       sourceEnd: '01:01:57:00',
@@ -59,7 +59,7 @@ describe('Event Class', () => {
     assert.strictEqual(event.recordEnd.toString(), '01;00;21;21');
   });
 
-  it('Should separate trackType from trackNumber', () => {
+  it('new Event(CMXstring) should split track to type and number', () => {
     const event = new Event('004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19 ');
 
     assert.strictEqual(event.number, 4);
@@ -73,7 +73,34 @@ describe('Event Class', () => {
     assert.strictEqual(event.recordEnd.toString(), '01;00;12;19');
   });
 
-  it('Should concatenate two comment lines in the comment property', () => {
+  it('addComment("* SOURCE FILE: ...") should add a sourceFile property to Event', () => {
+    const event = new Event();
+    event.addComment('* SOURCE FILE: BOONE SMITH ON CAMERA HOST_-720P');
+
+    assert.strictEqual(event.sourceFile, 'BOONE SMITH ON CAMERA HOST_-720P');
+  });
+
+  it('addComment("* FROM CLIP NAME: ...") should add a sourceClip property to Event', () => {
+    const event = new Event();
+    event.addComment('* FROM CLIP NAME:  BOONE SMITH ON CAMERA HOST_-720P.NEW.01 ');
+    assert.strictEqual(event.sourceClip, 'BOONE SMITH ON CAMERA HOST_-720P.NEW.01');
+  });
+
+  it('addComment("* Misc") should add a comment property to Event', () => {
+    const event = new Event();
+    event.addComment('* TIMEWARP EFFECT AT SEQUENCE TC 01;00;26;10. ');
+
+    assert.strictEqual(event.comment, 'TIMEWARP EFFECT AT SEQUENCE TC 01;00;26;10.');
+  });
+
+  it('addComment() should do nothing if invalid comment string is passed', () => {
+    const event = new Event();
+    event.addComment('004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19 ');
+
+    assert.strictEqual(event.comment, undefined);
+  });
+
+  it('addComment() should concatenate multi-line comments', () => {
     const event = new Event('004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19 ');
     event.addComment('* GETTY__QEVL1ESCP001_GREAT ESCAPES_MECKLENBURG SIX_AERIAL AROUND PRISON ON ALCATR ');
     event.addComment('* AZ ISLAND _622-21 ');
@@ -81,11 +108,23 @@ describe('Event Class', () => {
     assert.strictEqual(event.comment, 'GETTY__QEVL1ESCP001_GREAT ESCAPES_MECKLENBURG SIX_AERIAL AROUND PRISON ON ALCATRAZ ISLAND _622-21');
   });
 
-  it('Should throw a TypeError when a non-string, non-object is passed to the constructor', () => {
-    assert.throws(() => new Event(5), TypeError);
+  it('setMotionEffect() should add a motionEffect property', () => {
+    const event = new Event();
+    event.setMotionEffect('M2   KIRA_PAS       024.5                01:01:25:14 ');
+
+    assert.strictEqual(event.motionEffect.reel, 'KIRA_PAS');
+    assert.strictEqual(event.motionEffect.speed, 24.5);
+    assert.strictEqual(event.motionEffect.entryPoint.toString(), '01;01;25;14');
   });
 
-  it('Should throw a TypeError when an invalid event string is passed', () => {
-    assert.throws(() => new Event('blagfodot'));
+  it('setMotionEffect() should ignore an invalid Motion Effect line', () => {
+    const event = new Event();
+    event.setMotionEffect('blarg');
+
+    assert.strictEqual(event.motionEffect, undefined);
+  });
+
+  it('new Event(invalidString) should throw a TypeError', () => {
+    assert.throws(() => new Event(5), TypeError);
   });
 });
