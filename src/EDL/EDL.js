@@ -13,6 +13,7 @@ class EDL {
 
     const rl = readline.createInterface({
       input: fs.createReadStream(inputFile),
+      crlfDelay: Infinity,
     });
 
     rl.on('line', (line) => {
@@ -26,9 +27,11 @@ class EDL {
       }
     });
 
-    rl.on('close', () => {
-      this.events.push(currentEvent);
-      return this;
+    return new Promise((resolve) => {
+      rl.on('close', () => {
+        this.events.push(currentEvent);
+        resolve(this);
+      });
     });
   }
 }
