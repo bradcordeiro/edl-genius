@@ -1,6 +1,6 @@
 {
   "name": "edl-genius",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "An ES6 module to work with Edit Decision Lists",
   "main": "./src/EDL/EDL.js",
   "scripts": {
@@ -13,7 +13,6 @@
     "url": "http://www.bradc.com/"
   },
   "dependencies": {
-    "npm": "^6.2.0",
     "timecode-boss": "^1.0.0"
   },
   "devDependencies": {
