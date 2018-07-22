@@ -17,4 +17,9 @@ describe('Comment Parsers', () => {
     const { comment } = commentParser('* TIMEWARP EFFECT AT SEQUENCE TC 01;00;26;10. ');
     assert.strictEqual(comment, 'TIMEWARP EFFECT AT SEQUENCE TC 01;00;26;10. ');
   });
+
+  it('Should return undefined if a non-comment is passed', () => {
+    const obj = commentParser('004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19 ');
+    assert.strictEqual(obj, undefined);
+  });
 });

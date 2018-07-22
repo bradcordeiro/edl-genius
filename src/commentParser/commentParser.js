@@ -1,25 +1,23 @@
-const SOURCE_FILE_REGEX = /^\*(?:\s+)?SOURCE FILE:\s+(.*)$/;
-const SOURCE_CLIP_REGEX = /^\*(?:\s+)?FROM CLIP NAME:\s+(.*)$/;
-const COMMENT_REGEX = /^\*(?:\s+)?(.*)$/;
+const RegexPatterns = require('../common/RegexPatterns');
 
 function parse(input) {
-  if (!COMMENT_REGEX.test(input)) return undefined;
+  if (!RegexPatterns.CMX_COMMENT_REGEX.test(input)) return undefined;
 
-  if (SOURCE_FILE_REGEX.test(input)) {
-    const [, sourceFile] = SOURCE_FILE_REGEX.exec(input);
+  if (RegexPatterns.CMX_SOURCE_FILE_REGEX.test(input)) {
+    const [, sourceFile] = RegexPatterns.CMX_SOURCE_FILE_REGEX.exec(input);
     return {
       sourceFile: sourceFile.trim(),
     };
   }
 
-  if (SOURCE_CLIP_REGEX.test(input)) {
-    const [, sourceClip] = SOURCE_CLIP_REGEX.exec(input);
+  if (RegexPatterns.CMX_SOURCE_CLIP_REGEX.test(input)) {
+    const [, sourceClip] = RegexPatterns.CMX_SOURCE_CLIP_REGEX.exec(input);
     return {
       sourceClip: sourceClip.trim(),
     };
   }
 
-  const [, comment] = COMMENT_REGEX.exec(input);
+  const [, comment] = RegexPatterns.CMX_COMMENT_REGEX.exec(input);
   return { comment };
 }
 

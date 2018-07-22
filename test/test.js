@@ -1,4 +1,4 @@
-require('../src/edlParser/edlParser.test');
-require('../src/eventParser/eventParser.test');
-require('../src/motionEffectParser/motionEffectParser.test');
+require('../src/EDL/EDL.test');
+require('../src/MotionEffect/MotionEffect.test');
 require('../src/commentParser/commentParser.test');
+require('../src/Event/Event.test');
