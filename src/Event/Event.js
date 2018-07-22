@@ -59,8 +59,8 @@ function parseCMXEvent(input, sourceFrameRate, recordFrameRate) {
 class Event {
   constructor(input, sourceFrameRate, recordFrameRate) {
     if (input) {
-      this.sourceFrameRate = sourceFrameRate || 29.97;
-      this.recordFrameRate = recordFrameRate || 29.97;
+      this.sourceFrameRate = parseFloat(sourceFrameRate) || 29.97;
+      this.recordFrameRate = parseFloat(recordFrameRate) || 29.97;
 
 
       let parsedEvent;
