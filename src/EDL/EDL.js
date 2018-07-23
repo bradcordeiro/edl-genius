@@ -42,8 +42,12 @@ class EDL {
     });
   }
 
-  toJSON() {
-    return JSON.stringify(this.events.map(event => event.toJSON(false)));
+  toJSON(stringify) {
+    const json = this.events.map(event => event.toJSON(false));
+
+    if (stringify === true) return JSON.stringify(json);
+
+    return json;
   }
 
   setEventFrameRate(line) {

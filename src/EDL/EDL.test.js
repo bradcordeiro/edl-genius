@@ -62,11 +62,20 @@ describe('EDL Class', () => {
     assert.strictEqual(dropFramEvent.sourceStart.toString(), '01;31;42;26');
   });
 
-  it('toJSON() should return a JSON string', async () => {
+  it('toJSON(true) should return a JSON string', async () => {
     const edl = await new EDL(29.97).read('./test/edl_files/cmx3600.edl');
-    const stringified = edl.toJSON();
+    const stringified = edl.toJSON(true);
     const json = JSON.parse(stringified);
 
     assert.strictEqual(typeof json, 'object');
+  });
+
+  it('toJSON() should return a JSON string', async () => {
+    const edl = await new EDL(29.97).read('./test/edl_files/cmx3600.edl');
+    const json = edl.toJSON();
+    const stringified = JSON.stringify(json);
+
+    assert.strictEqual(typeof json, 'object');
+    assert.strictEqual(typeof stringified, 'string');
   });
 });
