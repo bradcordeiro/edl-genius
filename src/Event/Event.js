@@ -93,9 +93,11 @@ class Event {
   }
 
   addComment(input) {
-    if (!RegexPatterns.CMX_COMMENT_REGEX.test(input)) return;
 
-    const parsedComment = parseCMXComment(input);
+    let parsedComment = { comment: input };
+
+    if (RegexPatterns.CMX_COMMENT_REGEX.test(input)) parsedComment = parseCMXComment(input);
+
     if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceFile')) {
       this.sourceFile = parsedComment.sourceFile;
     } else if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceClip')) {

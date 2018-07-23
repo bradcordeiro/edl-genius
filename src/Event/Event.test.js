@@ -93,11 +93,11 @@ describe('Event Class', () => {
     assert.strictEqual(event.comment, 'TIMEWARP EFFECT AT SEQUENCE TC 01;00;26;10.');
   });
 
-  it('addComment() should do nothing if invalid comment string is passed', () => {
+  it('addComment() should add exact text of passed string if is not an EDL comment', () => {
     const event = new Event();
     event.addComment('004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19 ');
 
-    assert.strictEqual(event.comment, undefined);
+    assert.strictEqual(event.comment, '004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19');
   });
 
   it('addComment() should concatenate multi-line comments', () => {
