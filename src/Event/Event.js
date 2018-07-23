@@ -3,8 +3,6 @@ const RegexPatterns = require('../common/RegexPatterns');
 const MotionEffect = require('../MotionEffect/MotionEffect');
 
 function parseCMXComment(input) {
-  if (!RegexPatterns.CMX_COMMENT_REGEX.test(input)) return undefined;
-
   if (RegexPatterns.CMX_SOURCE_FILE_REGEX.test(input)) {
     const [, sourceFile] = RegexPatterns.CMX_SOURCE_FILE_REGEX.exec(input);
     return {
@@ -62,25 +60,18 @@ class Event {
       this.sourceFrameRate = parseFloat(sourceFrameRate) || 29.97;
       this.recordFrameRate = parseFloat(recordFrameRate) || 29.97;
 
-
-      let parsedEvent;
-
-      if (typeof input === 'string') {
-        parsedEvent = this.parse(input, this.sourceFrameRate, this.recordFrameRate);
+      if (typeof input === 'string' && RegexPatterns.CMX_EVENT_REGEX.test(input)) {
+        Object.assign(this, parseCMXEvent(input, sourceFrameRate, recordFrameRate));
       } else if (typeof input === 'object') {
-        parsedEvent = input;
+        Object.assign(this, input);
       } else {
         throw new TypeError('Event must be created from an Object or String.');
       }
 
-      Object.assign(this, parsedEvent);
       this.convertTimecodeProperties(this.sourceFrameRate, this.recordFrameRate);
-    }
-  }
 
-  parse(input, sourceFrameRate, recordFrameRate) {
-    if (RegexPatterns.CMX_EVENT_REGEX.test(input)) {
-      Object.assign(this, parseCMXEvent(input, sourceFrameRate, recordFrameRate));
+      delete this.sourceFrameRate;
+      delete this.recordFrameRate;
     }
   }
 
@@ -93,7 +84,6 @@ class Event {
   }
 
   addComment(input) {
-
     let parsedComment = { comment: input };
 
     if (RegexPatterns.CMX_COMMENT_REGEX.test(input)) parsedComment = parseCMXComment(input);
@@ -107,6 +97,24 @@ class Event {
     } else {
       this.comment = parsedComment.comment.trim();
     }
+  }
+
+  toJSON(stringify) {
+    const json = {};
+    Object.assign(json, this);
+
+    json.sourceStart = json.sourceStart.toString();
+    json.sourceEnd = json.sourceEnd.toString();
+    json.recordStart = json.recordStart.toString();
+    json.recordEnd = json.recordEnd.toString();
+
+    if (json.motionEffect && json.motionEffect.entryPoint) {
+      json.motionEffect.entryPoint = json.motionEffect.entryPoint.toString();
+    }
+
+    if (stringify === true) return JSON.stringify(json);
+
+    return json;
   }
 
   convertTimecodeProperties(sourceFrameRate, recordFrameRate) {

@@ -42,6 +42,10 @@ class EDL {
     });
   }
 
+  toJSON() {
+    return JSON.stringify(this.events.map(event => event.toJSON(false)));
+  }
+
   setEventFrameRate(line) {
     if (line === 'FCM: NON-DROP FRAME') return 30;
     if (line === 'FCM: DROP FRAME') return 29.97;

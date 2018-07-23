@@ -124,6 +124,38 @@ describe('Event Class', () => {
     assert.strictEqual(event.motionEffect, undefined);
   });
 
+  it('toJSON() should return a stringifiable object', () => {
+    const event = new Event('003  BOONE_SM V     C        01:01:43:05 01:01:57:00 01:00:07:26 01:00:21:21');
+    const json = event.toJSON();
+    const stringified = JSON.stringify(json);
+
+    assert.strictEqual(stringified, '{"number":3,"reel":"BOONE_SM","trackType":"V","transition":"C","sourceStart":"01;01;43;05","sourceEnd":"01;01;57;00","recordStart":"01;00;07;26","recordEnd":"01;00;21;21"}');
+    assert.strictEqual(json.number, 3);
+    assert.strictEqual(json.reel, 'BOONE_SM');
+    assert.strictEqual(json.trackType, 'V');
+    assert.strictEqual(json.transition, 'C');
+    assert.strictEqual(json.sourceStart, '01;01;43;05');
+    assert.strictEqual(json.sourceEnd, '01;01;57;00');
+    assert.strictEqual(json.recordStart, '01;00;07;26');
+    assert.strictEqual(json.recordEnd, '01;00;21;21');
+  });
+
+  it('toJSON(true) should return a JSON string', () => {
+    const event = new Event('003  BOONE_SM V     C        01:01:43:05 01:01:57:00 01:00:07:26 01:00:21:21');
+    const stringified = event.toJSON(true);
+    const json = JSON.parse(stringified);
+
+    assert.strictEqual(stringified, '{"number":3,"reel":"BOONE_SM","trackType":"V","transition":"C","sourceStart":"01;01;43;05","sourceEnd":"01;01;57;00","recordStart":"01;00;07;26","recordEnd":"01;00;21;21"}');
+    assert.strictEqual(json.number, 3);
+    assert.strictEqual(json.reel, 'BOONE_SM');
+    assert.strictEqual(json.trackType, 'V');
+    assert.strictEqual(json.transition, 'C');
+    assert.strictEqual(json.sourceStart, '01;01;43;05');
+    assert.strictEqual(json.sourceEnd, '01;01;57;00');
+    assert.strictEqual(json.recordStart, '01;00;07;26');
+    assert.strictEqual(json.recordEnd, '01;00;21;21');
+  });
+
   it('new Event(invalidString) should throw a TypeError', () => {
     assert.throws(() => new Event(5), TypeError);
   });
