@@ -101,11 +101,11 @@ events | [Event] | An array of Events found in the EDL. (See Event class descrip
 
 ##### Methods
 
-Method | Argument Type | Return Type
------- | ------------- | -----------
-read(*file*) | String | Promise
-
-Reads the file at the passed location asynchronously, and stores the found EDL Events in the EDL object's *events* property. The return value's Promise Resolver is given the EDL object as its argument.
+Method | Argument Type | Return Type | Description
+------ | ------------- | ----------- |------------
+read(*file*) | String | Promise | Reads the file argument, and stores the found EDL Events in the EDL object's *events* property. The Promise Resolver is given the EDL object as its argument.
+toJSON(*stringify*) | Boolean | Object or String | Returns a JSON-strigifiable object if *stringify* is *false*, or a JSON string if *stringify* is *true*
+filterDuplicateMultitrack() | *none* | EDL | Returns a new EDL with duplicate events removed (ignoring track number).
 
 #### Event Class
 

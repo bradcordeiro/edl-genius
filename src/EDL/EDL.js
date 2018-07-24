@@ -50,6 +50,28 @@ class EDL {
     return json;
   }
 
+  filterDuplicateMultitrack() {
+    const filtered = new EDL(this.frameRate);
+
+    filtered.events = this.events.filter((event, index) => {
+      if (index === 0) return true;
+
+      if (event.reel === this.events[index - 1].reel
+          && event.trackType === this.events[index - 1].trackType
+          && event.sourceClip === this.events[index - 1].sourceClip
+          && event.sourceFile === this.events[index - 1].sourceFile
+          && event.sourceStart.toString() === this.events[index - 1].sourceStart.toString()
+          && event.sourceEnd.toString() === this.events[index - 1].sourceEnd.toString()
+          && event.recordStart.toString() === this.events[index - 1].recordStart.toString()
+          && event.recordEnd.toString() === this.events[index - 1].recordEnd.toString()
+      ) return false;
+
+      return true;
+    });
+
+    return filtered;
+  }
+
   setEventFrameRate(line) {
     if (line === 'FCM: NON-DROP FRAME') return 30;
     if (line === 'FCM: DROP FRAME') return 29.97;

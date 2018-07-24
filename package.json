@@ -14,7 +14,7 @@
     "url": "http://www.bradc.com/"
   },
   "dependencies": {
-    "timecode-boss": "^2.0.0"
+    "timecode-boss": "^2.1.0"
   },
   "devDependencies": {
     "coveralls": "^3.0.2",

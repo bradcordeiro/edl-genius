@@ -78,4 +78,11 @@ describe('EDL Class', () => {
     assert.strictEqual(typeof json, 'object');
     assert.strictEqual(typeof stringified, 'string');
   });
+
+  it('filterDuplicateMultitrack() should filter out duplicate sources', async () => {
+    const edl = await new EDL(29.97).read('./test/edl_files/12_16 TL01 MUSIC.edl');
+    const filtered = edl.filterDuplicateMultitrack();
+
+    assert.strictEqual(filtered.events.length, 296);
+  });
 });
