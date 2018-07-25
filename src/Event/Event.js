@@ -57,8 +57,8 @@ function parseCMXEvent(input, sourceFrameRate, recordFrameRate) {
 class Event {
   constructor(input, sourceFrameRate, recordFrameRate) {
     if (input) {
-      this.sourceFrameRate = parseFloat(sourceFrameRate) || 29.97;
-      this.recordFrameRate = parseFloat(recordFrameRate) || 29.97;
+      this.sourceFrameRate = Number.isNaN(sourceFrameRate) ? 29.97 : parseFloat(sourceFrameRate);
+      this.recordFrameRate = Number.isNaN(recordFrameRate) ? 29.97 : parseFloat(recordFrameRate);
 
       if (typeof input === 'string' && RegexPatterns.CMX_EVENT_REGEX.test(input)) {
         Object.assign(this, parseCMXEvent(input, sourceFrameRate, recordFrameRate));

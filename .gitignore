@@ -1,6 +1,7 @@
 .DS_Store
 .vscode
 
+test/debug.js
 node_modules
 
 coverage

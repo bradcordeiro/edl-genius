@@ -9,6 +9,15 @@ describe('EDL Class', () => {
     assert.strictEqual(edl.frameRate, 29.97);
   });
 
+  it('Should set the recordStart and recordEnd framerates to this.frameRate', async () => {
+    const edl = await new EDL(23.98).read('./test/edl_files/cmx3600.edl');
+
+    edl.events.forEach((event) => {
+      assert.strictEqual(event.recordStart.frameRate, 23.98);
+      assert.strictEqual(event.recordEnd.frameRate, 23.98);
+    });
+  });
+
   it('Should find 9 events in test file "cmx3600.edl"', async () => {
     const edl = await new EDL(29.97).read('./test/edl_files/cmx3600.edl');
     assert.strictEqual(edl.events.length, 9);

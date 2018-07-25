@@ -5,7 +5,7 @@ const Event = require('../Event/Event');
 
 class EDL {
   constructor(frameRate) {
-    if (!frameRate) this.frameRate = 29.97;
+    this.frameRate = frameRate || 29.97;
 
     this.events = [];
   }
