@@ -1,3 +1,3 @@
-require('../src/EDL/EDL.test');
-require('../src/MotionEffect/MotionEffect.test');
-require('../src/Event/Event.test');
+require('../lib/EDL/EDL.test');
+require('../lib/MotionEffect/MotionEffect.test');
+require('../lib/Event/Event.test');
