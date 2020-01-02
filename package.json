@@ -1,9 +1,9 @@
 {
   "name": "edl-genius",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "An ES6 module to work with Edit Decision Lists",
   "license": "MIT",
-  "main": "./src/EDL/EDL.js",
+  "main": "./index.js",
   "scripts": {
     "test": "mocha",
     "test-coverage": "nyc mocha"
