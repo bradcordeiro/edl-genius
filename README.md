@@ -9,10 +9,10 @@ An ES6 module to parse Edit Decision Lists. Currently, only CMX 3600 EDLs are su
   ```
 
   ```javascript
-  const EDL = require('edl-genius');
+  const EditDecisionList = require('edl-genius');
 
-  let e = new EDL(29.97);
-  edl.read('/path/to/your/edl')
+  let e = new EditDecisionList(29.97, 'cmx3600');
+  edl.readFile('/path/to/your/edl')
     .then((edl) => {
       console.log(edl.events);
     })
@@ -89,8 +89,8 @@ Timecode objects are created using [timecode-boss](https://github.com/bradcordei
 
 Constructor |
 ----------- |
-new EDL(frameRate : Number) |
-Returns an empty EDL, with its record frame rate set to the argument. The record frame rate defaults to 29.97 (a.k.a. 30 drop-frame) if omitted. The record frame rate is the frame rate of the sequence the EDL represents, as opposed to the frame rate of the source material in it, which is parsed by this package. |
+new EDL(frameRate : Number, type : String) |
+Returns an empty EDL, with its record frame rate set to the argument. The record frame rate defaults to 29.97 (a.k.a. 30 drop-frame) if omitted, and type defaults to 'cmx3600'. The record frame rate is the frame rate of the sequence the EDL represents, as opposed to the frame rate of the source material in it, which is parsed by this package. |
 
 ##### Properties
 
@@ -103,16 +103,12 @@ events | [Event] | An array of Events found in the EDL. (See Event class descrip
 
 Method | Argument Type | Return Type | Description
 ------ | ------------- | ----------- |------------
-read(*file*) | String | Promise | Reads the file argument, and stores the found EDL Events in the EDL object's *events* property. The Promise Resolver is given the EDL object as its argument.
+readFile(*file*) | String | Promise | Reads the file argument, and stores the found EDL Events in the EDL object's *events* property. The Promise Resolver is given *this*  as its argument.
+fromString(string) | String | Promise | Parses a string, and stores the EDL Events in the EDL object's *events* property. The Promise Resolver is given *this*  as its argument.
 toJSON(*stringify*) | Boolean | Object or String | Returns a JSON-strigifiable object if *stringify* is *false*, or a JSON string if *stringify* is *true*
 filterDuplicateMultitrack() | *none* | EDL | Returns a new EDL with duplicate events removed (ignoring track number).
 
 #### Event Class
-
-Constructor |
------------ |
-new Event(input : String, sourceFrameRate : Number, recordFrameRate : Number) |
-Parses the passed string into class properties, using the sourceFrameRate for source timecodes and recordFrameRate for record timecodes. If called with no arguments, an empty Event is created, whose properties can be set manually. IF no sourceFrameRate or recordFrameRate are passed, they default to 29.97. |
 
 ##### Properties
 
@@ -144,17 +140,6 @@ sourceClip | String | The clip name from the editing system that generated the E
 comment | String | Any miscellaneous comments added to the event in the EDL | GETTY IMAGES__QEVL1GRND130_UNDERGROUND_EL CHAPO TUNNELS_INTERIOR OF ALCATRAZ PRISON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302 |
 
 #### MotionEffect Class
-
-Constructor |
------------ |
-new MotionEffect(input : String) |
-Parses the passed string into class properties. If called with no arguments, an empty MotionEffect is created, whose properties can be set manually. |
-
-For clarity, here is an example motion effect that EDL could parse (this is also in the Event example above):
-
-```
-M2   QEVL1GRN       037.5                01:31:44:03
-```
 
 ##### Properties
 
