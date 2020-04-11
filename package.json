@@ -1,6 +1,6 @@
 {
   "name": "edl-genius",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "An ES6 module to work with Edit Decision Lists",
   "license": "MIT",
   "main": "./index.js",
