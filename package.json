@@ -1,6 +1,6 @@
 {
   "name": "edl-genius",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "description": "An ES6 module to work with Edit Decision Lists",
   "license": "MIT",
   "main": "./index.js",
@@ -14,7 +14,7 @@
     "url": "http://www.bradc.com/"
   },
   "dependencies": {
-    "timecode-boss": "^2.0.3"
+    "timecode-boss": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
