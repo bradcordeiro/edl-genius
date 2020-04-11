@@ -14,7 +14,7 @@
     "url": "http://www.bradc.com/"
   },
   "dependencies": {
-    "timecode-boss": "^2.0.2"
+    "timecode-boss": "^2.0.3"
   },
   "devDependencies": {
     "eslint": "^4.19.1",
