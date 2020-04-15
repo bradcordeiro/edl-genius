@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "detect-character-encoding": "^0.8.0",
+    "fast-json-stringify": "^2.0.0",
     "timecode-boss": "^4.0.0"
   },
   "devDependencies": {
