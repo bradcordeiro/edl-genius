@@ -30,7 +30,8 @@ An ES6 module to parse Edit Decision Lists. Currently, only CMX 3600 EDLs are su
       recordStart: Timecode { frameRate: 29.97, frameCount: 107892 },
       recordEnd: Timecode { frameRate: 29.97, frameCount: 108089 },
       sourceClip: 'ACC112 WARBIRDS.NEW.01',
-      sourceFile: 'ACC112 WARBIRDS' },
+      sourceFile: 'ACC112 WARBIRDS'
+      transitionTo: 'ACC118 BATTLEPIGS.NEW.01 },
     Event {
       sourceFrameRate: 29.97,
       recordFrameRate: 29.97,
@@ -121,6 +122,7 @@ M2   QEVL1GRN       037.5                01:31:44:03
 * SON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302
 * SOURCE FILE: QEVL1GRND130.MOV
 * FROM CLIP NAME:  QEVL1GRND130.NEW.01
+* TO CLIP NAME:  QEVL1ESCP001.NEW.01
 ```
 
 Name | Type | Description | Example (referencing above event)
@@ -137,6 +139,7 @@ recordEnd | Timecode | The end of the clip's position in the sequence | 01:00:03
 motionEffect | MotionEffect | Any speed-change applied to the clip (see MotionEffect class below) | { reel: 'QEVL1GRN', speed: 37.5, entryPoint: 01:31:44:03 } |
 sourceFile | String | The source file name for the source clip | QEVL1GRND130.MOV |
 sourceClip | String | The clip name from the editing system that generated the EDL | QEVL1GRND130.NEW.01 |
+toClip | String | If there is a transition from this clip to another, the clip name it transitions to | QEVL1ESCP001.NEW.01 | 
 comment | String | Any miscellaneous comments added to the event in the EDL | GETTY IMAGES__QEVL1GRND130_UNDERGROUND_EL CHAPO TUNNELS_INTERIOR OF ALCATRAZ PRISON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302 |
 
 #### MotionEffect Class
