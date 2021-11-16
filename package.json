@@ -1,6 +1,6 @@
 {
   "name": "edl-genius",
-  "version": "3.4.7",
+  "version": "3.4.8",
   "description": "An ES6 module to work with Edit Decision Lists",
   "license": "MIT",
   "main": "./index.js",
@@ -21,7 +21,7 @@
     "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.23.2",
-    "mocha": "^8.4.0",
+    "mocha": "^9.0.0",
     "nyc": "^15.1.0"
   }
 }
