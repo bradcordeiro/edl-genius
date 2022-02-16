@@ -1,6 +1,6 @@
 {
   "name": "edl-genius",
-  "version": "3.4.9",
+  "version": "3.4.10",
   "description": "An ES6 module to work with Edit Decision Lists",
   "license": "MIT",
   "main": "./index.js",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "fast-json-stringify": "^2.7.0",
-    "timecode-boss": "^5.0.1"
+    "timecode-boss": "^4.5.0"
   },
   "devDependencies": {
     "eslint": "^7.26.0",
