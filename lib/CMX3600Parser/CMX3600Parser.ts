@@ -1,6 +1,6 @@
-const { Transform } = require('stream');
-const Timecode = require('timecode-boss');
-const Event = require('../Event/Event');
+import { Transform } from 'stream';
+import Timecode from 'timecode-boss';
+import Event from '../Event/Event';
 
 const CMX_FRAME_RATE_LINE_BEGINNING = 'F';
 const CMX_MOTION_EFFECT_LINE_BEGINNING = 'M';
@@ -15,8 +15,15 @@ const CMX_TO_CLIP_REGEX = /^\*(?:\s+)?TO CLIP NAME:\s+(.*)$/;
 const CMX_COMMENT_REGEX = /^\*(?:\s+)?(.*)$/;
 
 class CMX3600Parser extends Transform {
+  recordFrameRate: number;
+
+  sourceFrameRate: number;
+
+  currentEvent?: Event;
+
   constructor(recordFrameRate = 29.97) {
     super({ objectMode: true });
+
     this.recordFrameRate = recordFrameRate;
     this.sourceFrameRate = recordFrameRate;
     this.currentEvent = new Event(null, this.sourceFrameRate, this.recordFrameRate);
@@ -142,4 +149,4 @@ class CMX3600Parser extends Transform {
   }
 }
 
-module.exports = CMX3600Parser;
+export default CMX3600Parser;

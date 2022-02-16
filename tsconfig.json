@@ -1,0 +1,13 @@
+{
+  "include": ["./lib/**/*.ts"],
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "./dist",
+    "module": "ES6",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "removeComments": true,
+    "lib": ["ES2017"],
+    "target": "ES5"
+  }
+}

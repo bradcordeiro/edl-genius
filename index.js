@@ -1,3 +1,3 @@
-const EDL = require('./lib/EditDecisionList/EditDecisionList');
+const EDL = require('./dist/EditDecisionList/EditDecisionList');
 
 module.exports = EDL;

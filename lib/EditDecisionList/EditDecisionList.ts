@@ -1,11 +1,11 @@
-const fs = require('fs');
-const readline = require('readline');
-const { Readable } = require('stream');
-const fastJson = require('fast-json-stringify');
-const Event = require('../Event/Event');
-const CMX3600Parser = require('../CMX3600Parser/CMX3600Parser');
+import * as fs from 'fs';
+import * as readline from 'readline';
+import { Readable, Transform } from 'stream';
+import fastJson from 'fast-json-stringify';
+import Event, { EventAttributes } from '../Event/Event';
+import CMX3600Parser from '../CMX3600Parser/CMX3600Parser';
 
-function getBasicStream(contents) {
+function getBasicStream(contents?: string | string[]) {
   if (Array.isArray(contents)) {
     return new Readable({
       read() {
@@ -21,7 +21,21 @@ function getBasicStream(contents) {
   });
 }
 
+export interface EditDecisionListAttributes {
+  frameRate: number;
+  type: string;
+  events: EventAttributes[];
+}
+
 class EditDecisionList {
+  parser: Transform;
+
+  frameRate: number;
+
+  type: string;
+
+  events: Event[];
+
   constructor(frameRate = 29.97, type = 'cmx3600') {
     this.frameRate = frameRate;
     this.type = type;
@@ -69,17 +83,17 @@ class EditDecisionList {
     });
   }
 
-  async fromBuffer(buf, encoding = 'utf8') {
+  async fromBuffer(buf: Buffer, encoding: BufferEncoding = 'utf8') {
     const stream = getBasicStream();
 
-    stream.push(buf, { encoding });
+    stream.push(buf, encoding);
     stream.push(null);
 
     return this.fromStream(stream);
   }
 
-  async fromString(string) {
-    const buf = Buffer.from(string);
+  async fromString(str: string) {
+    const buf = Buffer.from(str);
 
     return this.fromBuffer(buf);
   }
@@ -92,15 +106,12 @@ class EditDecisionList {
     return this;
   }
 
-  toObject() {
-    const obj = {
+  toObject() : EditDecisionListAttributes {
+    return {
       frameRate: this.frameRate,
       type: this.type,
+      events: this.events.map((event) => event.toObject()),
     };
-
-    obj.events = this.events.map((event) => event.toObject());
-
-    return obj;
   }
 
   toJSON() {
@@ -117,6 +128,7 @@ class EditDecisionList {
           },
         },
       },
+      type: 'object',
       properties: {
         frameRate: { type: 'number' },
         type: { type: 'string' },
@@ -175,4 +187,4 @@ class EditDecisionList {
   }
 }
 
-module.exports = EditDecisionList;
+export default EditDecisionList;

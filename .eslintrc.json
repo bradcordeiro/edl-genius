@@ -1,6 +1,19 @@
 {
-    "extends": "airbnb-base",
-    "rules": {
-        "no-underscore-dangle": ["error", { "allow": ["_transform"] }]
-    }
+  "root": true,
+    "ignorePatterns": ["node_modules/**/*", "dist/*.js", "*.js"],
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "project": ["./tsconfig.json"]
+    },
+    "plugins": ["@typescript-eslint"],
+    "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "airbnb",
+        "airbnb-typescript"
+    ],
+  "rules": {
+    "no-console": ["off"],
+    "max-len": ["warn", { "code": 140, "ignoreComments": true }],
+    "no-underscore-dangle": ["warn", { "allow": ["_transform", "_flush"] }]
+  }
 }
