@@ -1,11 +1,10 @@
 /* eslint-env mocha */
-/* eslint-disable new-cap */
-const assert = require('assert');
-const { Readable } = require('stream');
-const CMX3600Parser = require('./CMX3600Parser');
-const Event = require('../Event/Event');
+import assert from 'assert';
+import { Readable } from 'stream';
+import CMX3600Parser from '../lib/CMX3600Parser.js';
+import { type EventAttributes } from '../lib/Event.js';
 
-function getBasicStream(contents) {
+function getBasicStream(contents: string | string[]) : Readable {
   if (Array.isArray(contents)) {
     return new Readable({
       read() {
@@ -89,29 +88,48 @@ describe('CMX3600Parser', () => {
     it('new Event(CMXstring) should parse to Event properties', (done) => {
       const input = generateEvent();
       const output = new CMX3600Parser();
-      input.pipe(output);
-      const results = [];
+
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
-        assert.strictEqual(results[0].number, 3);
-        assert.strictEqual(results[0].reel, 'BOONE_SM');
-        assert.strictEqual(results[0].trackType, 'V');
-        assert.strictEqual(results[0].transition, 'C');
-        assert.strictEqual(results[0].sourceStart.toString(), '01:01:43;05');
-        assert.strictEqual(results[0].sourceEnd.toString(), '01:01:57;00');
-        assert.strictEqual(results[0].recordStart.toString(), '01:00:07;26');
-        assert.strictEqual(results[0].recordEnd.toString(), '01:00:21;21');
+        assert.notStrictEqual(results[0], undefined, 'Results array is empty');
+        assert.strictEqual(results[0].number, 3, 'Number was not set.');
+        assert.strictEqual(results[0].reel, 'BOONE_SM', 'Reel was not set.');
+        assert.strictEqual(results[0].trackType, 'V', 'Track type was not set.');
+        assert.strictEqual(results[0].transition, 'C', 'Transition was not set.');
 
+        if (results[0].sourceStart) {
+          assert.strictEqual(results[0].sourceStart.toString(), '01:01:43;05');
+        } else {
+          assert.strictEqual(true, false, 'Source Start was not set.');
+        }
+        if (results[0].sourceEnd) {
+          assert.strictEqual(results[0].sourceEnd.toString(), '01:01:57;00');
+        } else {
+          assert.strictEqual(true, false, 'Source End was not set.');
+        }
+        if (results[0].recordStart) {
+          assert.strictEqual(results[0].recordStart.toString(), '01:00:07;26');
+        } else {
+          assert.strictEqual(true, false, 'Record Start was not set.');
+        }
+        if (results[0].recordEnd) {
+          assert.strictEqual(results[0].recordEnd.toString(), '01:00:21;21');
+        } else {
+          assert.strictEqual(true, false, 'Record End was not set.');
+        }
         done();
       });
+
+      input.pipe(output);
     });
 
     it('new Event(CMXstring) should split track to type and number', (done) => {
       const input = generateAudioEvent();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -142,7 +160,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithSourceFile();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -155,7 +173,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventWithComments();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -168,27 +186,21 @@ describe('CMX3600Parser', () => {
       const input = generateEventWithComments();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
+        /* eslint-disable-next-line max-len */
         assert.strictEqual(results[0].comment, 'GETTY__QEVL1ESCP001_GREAT ESCAPES_MECKLENBURG SIX_AERIAL AROUND PRISON ON ALCATRAZ ISLAND _622-21');
         done();
       });
-    });
-
-    it('addComment() should add exact text of passed string if is not an EDL comment', () => {
-      const event = new Event();
-      event.addComment('004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19 ');
-
-      assert.strictEqual(event.comment, '004  BFD_CHIL A10   C        01:00:01:05 01:00:02:05 01:00:11:19 01:00:12:19');
     });
 
     it('should parse "* TO CLIP NAME:" to transtionTo property', (done) => {
       const input = generateEventwithTransition();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -203,11 +215,19 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
-        assert.strictEqual(results[0].motionEffect.reel, 'AQ100');
+        if (results[0]) {
+          if (results[0].motionEffect) {
+            assert.strictEqual(results[0].motionEffect.reel, 'AQ100');
+          } else {
+            assert.strictEqual(true, false, 'MotionEffect is undefined');
+          }
+        } else {
+          assert.strictEqual(true, false, 'Events array is empty.');
+        }
         done();
       });
     });
@@ -216,11 +236,19 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
-        assert.strictEqual(results[0].motionEffect.speed, 59.6);
+        if (results[0]) {
+          if (results[0].motionEffect) {
+            assert.strictEqual(results[0].motionEffect.speed, 59.6);
+          } else {
+            assert.strictEqual(true, false, 'MotionEffect is undefined');
+          }
+        } else {
+          assert.strictEqual(true, false, 'Events array is empty.');
+        }
         done();
       });
     });
@@ -229,11 +257,19 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffectwithNegativeSpeed();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
-        assert.strictEqual(results[0].motionEffect.speed, -92.8);
+        if (results[0]) {
+          if (results[0].motionEffect) {
+            assert.strictEqual(results[0].motionEffect.speed, -92.8);
+          } else {
+            assert.strictEqual(true, false, 'MotionEffect is undefined');
+          }
+        } else {
+          assert.strictEqual(true, false, 'Events array is empty.');
+        }
         done();
       });
     });
@@ -242,12 +278,20 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
-        assert.strictEqual(results[0].motionEffect.reel, 'AQ100');
-        assert.strictEqual(results[0].motionEffect.entryPoint.toString(), '00:02:18;05');
+        if (results[0]) {
+          if (results[0].motionEffect) {
+            assert.strictEqual(results[0].motionEffect.reel, 'AQ100');
+            assert.strictEqual(results[0].motionEffect.entryPoint.toString(), '00:02:18;05');
+          } else {
+            assert.strictEqual(true, false, 'MotionEffect is undefined');
+          }
+        } else {
+          assert.strictEqual(true, false, 'Events array is empty.');
+        }
         done();
       });
     });

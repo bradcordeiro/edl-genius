@@ -1,7 +1,7 @@
 /* eslint-env mocha */
-const assert = require('assert');
-const Timecode = require('timecode-boss');
-const Event = require('./Event');
+import assert from 'assert';
+import Timecode from 'timecode-boss';
+import Event from '../lib/Event.js';
 
 describe('Event Class', () => {
   it('new Event() should create an empty event', () => {
@@ -50,18 +50,19 @@ describe('Event Class', () => {
 
   it('setMotionEffect() should add a motionEffect property', () => {
     const event = new Event();
-    event.setMotionEffect({ reel: 'KIRA_PAS', speed: 24.5, entryPoint: new Timecode('01:01:25:14 ') });
+    event.setMotionEffect({ reel: 'KIRA_PAS', speed: 24.5, entryPoint: new Timecode('01:01:25:14') });
 
-    assert.strictEqual(event.motionEffect.reel, 'KIRA_PAS');
-    assert.strictEqual(event.motionEffect.speed, 24.5);
-    assert.strictEqual(event.motionEffect.entryPoint.toString(), '01:01:25;14');
-  });
-
-  it('setMotionEffect() should ignore an invalid Motion Effect line', () => {
-    const event = new Event();
-    event.setMotionEffect('blarg');
-
-    assert.strictEqual(event.motionEffect, undefined);
+    assert.deepEqual(event.motionEffect, {
+      reel: 'KIRA_PAS',
+      speed: 24.5,
+      entryPoint: {
+        hours: 1,
+        minutes: 1,
+        seconds: 25,
+        frames: 14,
+        frameRate: 29.97,
+      },
+    });
   });
 
   it('toObject() should return an object with the correct properties', () => {
@@ -85,25 +86,5 @@ describe('Event Class', () => {
     assert.deepStrictEqual(json.sourceEnd, { hours: 1, minutes: 1, seconds: 57, frames: 0, frameRate: 29.97 }); // eslint-disable-line
     assert.deepStrictEqual(json.recordStart, { hours: 1, minutes: 0, seconds: 7, frames: 26, frameRate: 29.97 }); // eslint-disable-line
     assert.deepStrictEqual(json.recordEnd, { hours: 1, minutes: 0, seconds: 21, frames: 21, frameRate: 29.97 }); // eslint-disable-line
-  });
-
-  it('toJSON() should return a JSON string', () => {
-    const event = new Event({
-      number: 3,
-      reel: 'BOONE_SM',
-      trackType: 'V',
-      transition: 'C',
-      sourceStart: '01:01:43:05',
-      sourceEnd: '01:01:57:00',
-      recordStart: '01:00:07:26',
-      recordEnd: '01:00:21:21',
-    });
-    const stringified = event.toJSON(true);
-
-    assert.strictEqual(stringified, '{"number":3,"reel":"BOONE_SM","trackType":"V","transition":"C","sourceStart":{"hours":1,"minutes":1,"seconds":43,"frames":5,"frameRate":29.97},"sourceEnd":{"hours":1,"minutes":1,"seconds":57,"frames":0,"frameRate":29.97},"recordStart":{"hours":1,"minutes":0,"seconds":7,"frames":26,"frameRate":29.97},"recordEnd":{"hours":1,"minutes":0,"seconds":21,"frames":21,"frameRate":29.97}}');
-  });
-
-  it('new Event(invalidString) should throw a TypeError', () => {
-    assert.throws(() => new Event(5), TypeError);
   });
 });

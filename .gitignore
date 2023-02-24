@@ -1,10 +1,7 @@
 .DS_Store
-.vscode
-
-test/debug.js
-node_modules
-
-coverage
-.nyc_output
-
 .env
+.nyc_output
+.vscode
+coverage
+node_modules
+test/debug.js

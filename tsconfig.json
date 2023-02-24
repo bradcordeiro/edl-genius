@@ -1,0 +1,9 @@
+{
+  "include": ["index.ts", "./lib/**/*.ts", "test/**/*.ts"],
+  "exclude": ["./lib/**/*.test.ts"],
+  "extends": "@tsconfig/node16/tsconfig.json",
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "./dist"
+  }
+}

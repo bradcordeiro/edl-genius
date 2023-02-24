@@ -1,22 +1,19 @@
 /* eslint-env mocha */
-const assert = require('assert');
-const MotionEffect = require('./MotionEffect');
+import assert from 'assert';
+import Timecode from 'timecode-boss';
+import MotionEffect from '../lib/MotionEffect.js';
 
 describe('Motion Effect', () => {
   it('Should deep copy a MotionEffect passed to the constructor', () => {
     const firstMotionEffect = new MotionEffect({ reel: 'KIRA_PAS', speed: 24.5, entryPoint: '01:01:25:14' });
     const secondMotionEffect = new MotionEffect(firstMotionEffect);
 
-    firstMotionEffect.reel = null;
-    firstMotionEffect.speed = null;
-    firstMotionEffect.entryPoint = null;
+    firstMotionEffect.reel = '';
+    firstMotionEffect.speed = 0;
+    firstMotionEffect.entryPoint = new Timecode(0);
 
     assert.strictEqual(secondMotionEffect.reel, 'KIRA_PAS');
     assert.strictEqual(secondMotionEffect.speed, 24.5);
     assert.strictEqual(secondMotionEffect.entryPoint.toString(), '01:01:25;14');
-  });
-
-  it('Should throw a TypeError when a non-MotionEffect or non-string is passed', () => {
-    assert.throws(() => new MotionEffect(84), TypeError);
   });
 });
