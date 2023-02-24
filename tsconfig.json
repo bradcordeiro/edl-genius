@@ -1,13 +1,9 @@
 {
-  "include": ["./lib/**/*.ts"],
+  "include": ["index.ts", "./lib/**/*.ts", "test/**/*.ts"],
+  "exclude": ["./lib/**/*.test.ts"],
+  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "declaration": true,
-    "outDir": "./dist",
-    "module": "ES6",
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "removeComments": true,
-    "lib": ["ES2017"],
-    "target": "ES5"
+    "outDir": "./dist"
   }
 }
