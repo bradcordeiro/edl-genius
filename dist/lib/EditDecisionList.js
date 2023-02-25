@@ -1,5 +1,5 @@
-import * as fs from 'fs';
-import * as readline from 'readline';
+import { createReadStream } from 'fs';
+import { createInterface } from 'readline';
 import { Readable } from 'stream';
 import Event from './Event.js';
 import CMX3600Parser from './CMX3600Parser.js';
@@ -22,26 +22,28 @@ export default class EditDecisionList {
         this.frameRate = frameRate;
         this.type = type;
         this.events = [];
+    }
+    getParser() {
         switch (this.type) {
             case 'cmx3600':
             default:
-                this.parser = new CMX3600Parser(frameRate);
+                return new CMX3600Parser(this.frameRate);
         }
     }
     async readStream(input) {
-        this.parser.on('data', (data) => this.events.push(data));
-        const rl = readline.createInterface({
+        const parser = this.getParser();
+        const rl = createInterface({
             input,
-            output: this.parser,
             crlfDelay: Infinity,
             terminal: false,
             historySize: 0,
         });
         return new Promise((resolve, reject) => {
+            rl.on('line', (line) => parser.push(line));
             rl.on('error', (error) => reject(error));
-            rl.on('close', () => this.parser.end());
-            this.parser.on('error', (error) => reject(error));
-            this.parser.on('end', () => resolve(this));
+            rl.on('close', () => parser.end());
+            parser.on('error', (error) => reject(error));
+            parser.on('end', () => resolve(this));
         });
     }
     async readBuffer(buf, encoding = 'utf8') {
@@ -70,7 +72,7 @@ export default class EditDecisionList {
         return this.fromObject(input);
     }
     async readFile(inputFile) {
-        const input = fs.createReadStream(inputFile);
+        const input = createReadStream(inputFile);
         return this.readStream(input);
     }
     toObject() {

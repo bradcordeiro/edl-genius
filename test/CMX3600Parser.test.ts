@@ -1,4 +1,6 @@
 /* eslint-env mocha */
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
 import assert from 'assert';
 import { Readable } from 'stream';
 import CMX3600Parser from '../lib/CMX3600Parser.js';
@@ -85,7 +87,7 @@ function generateEventwithMotionEffectwithNegativeSpeed() {
 
 describe('CMX3600Parser', () => {
   describe('Events', () => {
-    it('new Event(CMXstring) should parse to Event properties', (done) => {
+    it('piping CMX 3600 string should parse to Event properties', function (done) {
       const input = generateEvent();
       const output = new CMX3600Parser();
 
@@ -100,22 +102,22 @@ describe('CMX3600Parser', () => {
         assert.strictEqual(results[0].transition, 'C', 'Transition was not set.');
 
         if (results[0].sourceStart) {
-          assert.strictEqual(results[0].sourceStart.toString(), '01:01:43;05');
+          assert.deepStrictEqual(results[0].sourceStart, { hours: 1, minutes: 1, seconds: 43, frames: 5, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
         } else {
           assert.strictEqual(true, false, 'Source Start was not set.');
         }
         if (results[0].sourceEnd) {
-          assert.strictEqual(results[0].sourceEnd.toString(), '01:01:57;00');
+          assert.deepStrictEqual(results[0].sourceEnd, { hours: 1, minutes: 1, seconds: 57, frames: 0, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
         } else {
           assert.strictEqual(true, false, 'Source End was not set.');
         }
         if (results[0].recordStart) {
-          assert.strictEqual(results[0].recordStart.toString(), '01:00:07;26');
+          assert.deepStrictEqual(results[0].recordStart, { hours: 1, minutes: 0, seconds: 7, frames: 26, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
         } else {
           assert.strictEqual(true, false, 'Record Start was not set.');
         }
         if (results[0].recordEnd) {
-          assert.strictEqual(results[0].recordEnd.toString(), '01:00:21;21');
+          assert.deepStrictEqual(results[0].recordEnd, { hours: 1, minutes: 0, seconds: 21, frames: 21, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
         } else {
           assert.strictEqual(true, false, 'Record End was not set.');
         }
@@ -125,7 +127,7 @@ describe('CMX3600Parser', () => {
       input.pipe(output);
     });
 
-    it('new Event(CMXstring) should split track to type and number', (done) => {
+    it('piping CMX 3600 string should split track to type and number', function (done) {
       const input = generateAudioEvent();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -140,11 +142,11 @@ describe('CMX3600Parser', () => {
       });
     });
 
-    it('new Event(CMXstring) should parse audio video tracks', (done) => {
+    it('piping CMX 3600 string should parse audio video tracks', function (done) {
       const input = generateAudioVideoEvent();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results = [];
+      const results: EventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -156,7 +158,7 @@ describe('CMX3600Parser', () => {
   });
 
   describe('Comments', () => {
-    it('addComment("* SOURCE FILE: ...") should add a sourceFile property to Event', (done) => {
+    it('piping CMX 3600 string should parse "* SOURCE FILE:" to a sourceFile property on Event', function (done) {
       const input = generateEventwithSourceFile();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -169,7 +171,7 @@ describe('CMX3600Parser', () => {
       });
     });
 
-    it('addComment("* FROM CLIP NAME: ...") should add a sourceClip property to Event', (done) => {
+    it('piping CMX 3600 string should parse "* FROM CLIP NAME:" to a sourceClip property on Event', function (done) {
       const input = generateEventWithComments();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -182,7 +184,7 @@ describe('CMX3600Parser', () => {
       });
     });
 
-    it('addComment("* Misc") should add a comment property to Event', (done) => {
+    it('piping CMX 3600 string should parse "* Misc" to a comment property to Event', function (done) {
       const input = generateEventWithComments();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -196,7 +198,7 @@ describe('CMX3600Parser', () => {
       });
     });
 
-    it('should parse "* TO CLIP NAME:" to transtionTo property', (done) => {
+    it('piping CMX 3600 string should parse "* TO CLIP NAME:" to transtionTo property', function (done) {
       const input = generateEventwithTransition();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -211,7 +213,7 @@ describe('CMX3600Parser', () => {
   });
 
   describe('Motion Effects', () => {
-    it('Should get a reel', (done) => {
+    it('Should get a reel', function (done) {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -232,7 +234,7 @@ describe('CMX3600Parser', () => {
       });
     });
 
-    it('Should get speed as a float', (done) => {
+    it('Should get speed as a float', function (done) {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -253,7 +255,7 @@ describe('CMX3600Parser', () => {
       });
     });
 
-    it('Should correctly parse a negative speed', (done) => {
+    it('Should correctly parse a negative speed', function (done) {
       const input = generateEventwithMotionEffectwithNegativeSpeed();
       const output = new CMX3600Parser();
       input.pipe(output);
@@ -274,7 +276,7 @@ describe('CMX3600Parser', () => {
       });
     });
 
-    it('Should get entryPoint as a Timecode object', (done) => {
+    it('Should get entryPoint as a Timecode object', function (done) {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);

@@ -16,13 +16,11 @@ export type EventAttributes = {
   sourceFile?: string;
   motionEffect?: ConstructorParameters<typeof MotionEffect>[0];
   comment?: string;
+  sourceFrameRate?: number;
+  recordFrameRate?: number;
 };
 
 export default class Event implements EventAttributes {
-  sourceFrameRate: number;
-
-  recordFrameRate: number;
-
   number?: number;
 
   reel?: string;
@@ -50,6 +48,10 @@ export default class Event implements EventAttributes {
   motionEffect?: MotionEffect;
 
   comment?: string;
+
+  sourceFrameRate?: number;
+
+  recordFrameRate?: number;
 
   constructor(input: Partial<EventAttributes> = {}, sourceFrameRate = 29.97, recordFrameRate = 29.97) {
     this.sourceFrameRate = sourceFrameRate;
@@ -87,7 +89,7 @@ export default class Event implements EventAttributes {
     }
   }
 
-  toObject() : EventAttributes & { sourceFrameRate: number, recordFrameRate: number } {
+  toObject() : EventAttributes {
     return {
       sourceFrameRate: this.sourceFrameRate,
       recordFrameRate: this.recordFrameRate,

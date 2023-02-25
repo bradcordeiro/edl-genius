@@ -8,8 +8,7 @@
     "plugins": ["@typescript-eslint"],
     "extends": [
         "plugin:@typescript-eslint/recommended",
-        "airbnb",
-        "airbnb-typescript"
+        "airbnb-base-typescript"
     ],
   "rules": {
     "no-console": ["off"],

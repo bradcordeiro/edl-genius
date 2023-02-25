@@ -1,10 +1,10 @@
 /// <reference types="node" />
-import { Transform, Readable } from 'stream';
-import { type EventAttributes } from './Event.js';
+/// <reference types="node" />
+import { Transform } from 'stream';
 export default class CMX3600Parser extends Transform {
-    recordFrameRate: number;
-    sourceFrameRate: number;
-    currentEvent: EventAttributes;
+    private recordFrameRate;
+    private sourceFrameRate;
+    private currentEvent;
     constructor(recordFrameRate?: number);
     private changeFrameRate;
     private parseEvent;
@@ -14,6 +14,7 @@ export default class CMX3600Parser extends Transform {
     private parseComment;
     private parseMotionEffect;
     private parseNextEvent;
-    _transform(obj: Readable, enc: string, done?: () => void): void;
-    _flush(done?: () => void): void;
+    private pushCurrentEventConditionally;
+    _transform(obj: string | Buffer, enc: string, callback?: () => void): void;
+    _flush(callback?: () => void): void;
 }

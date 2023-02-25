@@ -1,1 +1,1 @@
-export default function suite(): void;
+export {};

@@ -15,10 +15,10 @@ export type EventAttributes = {
     sourceFile?: string;
     motionEffect?: ConstructorParameters<typeof MotionEffect>[0];
     comment?: string;
+    sourceFrameRate?: number;
+    recordFrameRate?: number;
 };
 export default class Event implements EventAttributes {
-    sourceFrameRate: number;
-    recordFrameRate: number;
     number?: number;
     reel?: string;
     trackType?: string;
@@ -33,11 +33,10 @@ export default class Event implements EventAttributes {
     sourceFile?: string;
     motionEffect?: MotionEffect;
     comment?: string;
+    sourceFrameRate?: number;
+    recordFrameRate?: number;
     constructor(input?: Partial<EventAttributes>, sourceFrameRate?: number, recordFrameRate?: number);
     setMotionEffect(input: MotionEffectAttributes): void;
     addComment(input: string): void;
-    toObject(): EventAttributes & {
-        sourceFrameRate: number;
-        recordFrameRate: number;
-    };
+    toObject(): EventAttributes;
 }

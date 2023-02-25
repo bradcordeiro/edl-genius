@@ -1,6 +1,6 @@
-import * as fs from 'fs';
-import * as readline from 'readline';
-import { Readable, Transform } from 'stream';
+import { createReadStream } from 'fs';
+import { createInterface } from 'readline';
+import { Readable } from 'stream';
 import Event, { EventAttributes } from './Event.js';
 import CMX3600Parser from './CMX3600Parser.js';
 
@@ -27,8 +27,6 @@ export interface EditDecisionListAttributes {
 }
 
 export default class EditDecisionList implements EditDecisionListAttributes {
-  parser: Transform;
-
   frameRate: number;
 
   type: string;
@@ -39,31 +37,33 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     this.frameRate = frameRate;
     this.type = type;
     this.events = [];
+  }
 
+  private getParser() {
     switch (this.type) {
       case 'cmx3600':
       default:
-        this.parser = new CMX3600Parser(frameRate);
+        return new CMX3600Parser(this.frameRate);
     }
   }
 
   private async readStream(input: Readable) : Promise<this> {
-    this.parser.on('data', (data) => this.events.push(data));
+    const parser = this.getParser();
 
-    const rl = readline.createInterface({
+    const rl = createInterface({
       input,
-      output: this.parser,
       crlfDelay: Infinity,
       terminal: false,
       historySize: 0,
     });
 
     return new Promise((resolve, reject) => {
+      rl.on('line', (line) => parser.push(line));
       rl.on('error', (error) => reject(error));
-      rl.on('close', () => this.parser.end());
+      rl.on('close', () => parser.end());
 
-      this.parser.on('error', (error) => reject(error));
-      this.parser.on('end', () => resolve(this));
+      parser.on('error', (error) => reject(error));
+      parser.on('end', () => resolve(this));
     });
   }
 
@@ -99,7 +99,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
   }
 
   async readFile(inputFile: string) : Promise<this> {
-    const input = fs.createReadStream(inputFile);
+    const input = createReadStream(inputFile);
 
     return this.readStream(input);
   }

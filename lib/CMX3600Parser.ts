@@ -1,6 +1,6 @@
-import { Transform, Readable } from 'stream';
+import { Transform } from 'stream';
 import Timecode from 'timecode-boss';
-import Event, { type EventAttributes } from './Event.js';
+import { type EventAttributes } from './Event.js';
 
 const CMX_FRAME_RATE_LINE_BEGINNING = 'F';
 const CMX_MOTION_EFFECT_LINE_BEGINNING = 'M';
@@ -16,11 +16,11 @@ const CMX_TO_CLIP_REGEX = /^\*(?:\s+)?TO CLIP NAME:\s+(.*)$/;
 const CMX_COMMENT_REGEX = /^\*(?:\s+)?(.*)$/;
 
 export default class CMX3600Parser extends Transform {
-  recordFrameRate: number;
+  private recordFrameRate: number;
 
-  sourceFrameRate: number;
+  private sourceFrameRate: number;
 
-  currentEvent: EventAttributes;
+  private currentEvent: EventAttributes;
 
   constructor(recordFrameRate = 29.97) {
     super({ objectMode: true });
@@ -61,22 +61,24 @@ export default class CMX3600Parser extends Transform {
     let trackType: string | undefined;
     let tn: string | undefined;
 
-    const trackTypeMatches = /(\w)(\d+)?/.exec(track);
+    const trackTypeMatches = /([AV/]+)(\d+)?/.exec(track);
     if (trackTypeMatches) {
       [, trackType, tn] = trackTypeMatches;
     }
 
-    this.currentEvent = new Event({
-      number: parseInt(number, 10),
+    this.currentEvent = {
       reel,
       trackType,
       transition,
-      sourceStart: new Timecode(sourceStart, this.sourceFrameRate),
-      sourceEnd: new Timecode(sourceEnd, this.sourceFrameRate),
-      recordStart: new Timecode(recordStart, this.recordFrameRate),
-      recordEnd: new Timecode(recordEnd, this.recordFrameRate),
+      number: parseInt(number, 10),
+      sourceStart: new Timecode(sourceStart, this.sourceFrameRate).toObject(),
+      sourceEnd: new Timecode(sourceEnd, this.sourceFrameRate).toObject(),
+      recordStart: new Timecode(recordStart, this.recordFrameRate).toObject(),
+      recordEnd: new Timecode(recordEnd, this.recordFrameRate).toObject(),
       comment: '',
-    }, this.sourceFrameRate, this.recordFrameRate);
+      sourceFrameRate: this.sourceFrameRate,
+      recordFrameRate: this.recordFrameRate,
+    };
 
     if (tn) this.currentEvent.trackNumber = parseInt(tn, 10);
   }
@@ -139,14 +141,18 @@ export default class CMX3600Parser extends Transform {
   }
 
   private parseNextEvent(line: string) {
-    if (Object.prototype.hasOwnProperty.call(this.currentEvent, 'number')) {
-      this.push(this.currentEvent);
-    }
+    this.pushCurrentEventConditionally();
     this.parseEvent(line);
   }
 
-  _transform(obj: Readable, enc: string, done = () => {}) {
-    const line = obj.toString();
+  private pushCurrentEventConditionally() {
+    if (Object.prototype.hasOwnProperty.call(this.currentEvent, 'number')) {
+      this.push(this.currentEvent);
+    }
+  }
+
+  _transform(obj: string | Buffer, enc: string, callback = () => {}) {
+    const line = typeof obj === 'string' ? obj : obj.toString();
 
     if (line[0] === CMX_MOTION_EFFECT_LINE_BEGINNING) {
       this.parseMotionEffect(line);
@@ -158,13 +164,11 @@ export default class CMX3600Parser extends Transform {
       this.parseNextEvent(line);
     }
 
-    done();
+    callback();
   }
 
-  _flush(done = () => {}) {
-    if (Object.prototype.hasOwnProperty.call(this.currentEvent, 'number')) {
-      this.push(this.currentEvent);
-    }
-    done();
+  _flush(callback = () => {}) {
+    this.pushCurrentEventConditionally();
+    callback();
   }
 }

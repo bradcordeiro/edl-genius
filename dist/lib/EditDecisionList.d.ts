@@ -1,6 +1,6 @@
 /// <reference types="node" />
 /// <reference types="node" />
-import { Readable, Transform } from 'stream';
+import { Readable } from 'stream';
 import Event, { EventAttributes } from './Event.js';
 export interface EditDecisionListAttributes {
     frameRate: number;
@@ -8,11 +8,11 @@ export interface EditDecisionListAttributes {
     events: EventAttributes[];
 }
 export default class EditDecisionList implements EditDecisionListAttributes {
-    parser: Transform;
     frameRate: number;
     type: string;
     events: Event[];
     constructor(frameRate?: number, type?: string);
+    private getParser;
     private readStream;
     private readBuffer;
     private readString;
