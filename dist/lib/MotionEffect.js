@@ -9,7 +9,7 @@ export default class MotionEffect {
         return {
             reel: this.reel,
             speed: this.speed,
-            entryPoint: this.entryPoint.toString(),
+            entryPoint: this.entryPoint.toObject(),
         };
     }
 }
