@@ -45,6 +45,14 @@ describe('EditDecisionList Class', function () {
       await edl.readFile('./test/edl_files/070816_EG101_HEISTS_ROUGH_CUT_SOURCES_PART 1.edl');
       const event = edl.events[3];
 
+      /*
+      004  QEVL1GRN V     C        01:31:44:03 01:31:44:12 01:00:02:24 01:00:03:01
+      M2   QEVL1GRN       037.5                01:31:44:03
+      * GETTY IMAGES__QEVL1GRND130_UNDERGROUND_EL CHAPO TUNNELS_INTERIOR OF ALCATRAZ PRI
+      * SON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302
+      * FROM CLIP NAME:  QEVL1GRND130.NEW.01
+      */
+
       assert.strictEqual(event.number, 4);
       assert.strictEqual(event.reel, 'QEVL1GRN');
       assert.strictEqual(event.trackType, 'V');
@@ -53,7 +61,7 @@ describe('EditDecisionList Class', function () {
       assert.strictEqual(event.sourceEnd.toString(), '01:31:44;12');
       assert.strictEqual(event.recordStart.toString(), '01:00:02;24');
       assert.strictEqual(event.recordEnd.toString(), '01:00:03;01');
-      assert.deepStrictEqual(event.motionEffect, {
+      assert.deepStrictEqual(event.motionEffect?.toObject(), {
         reel: 'QEVL1GRN',
         speed: 37.5,
         entryPoint: {
@@ -61,7 +69,7 @@ describe('EditDecisionList Class', function () {
           minutes: 31,
           seconds: 44,
           frames: 3,
-          frameRate: 29.07,
+          frameRate: 29.97,
         },
       });
       assert.strictEqual(event.motionEffect.entryPoint.toString(), '01:31:44;03');

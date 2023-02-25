@@ -49,6 +49,10 @@ export default class EditDecisionList implements EditDecisionListAttributes {
 
   private async readStream(input: Readable) : Promise<this> {
     const parser = this.getParser();
+    parser.on('data', (data: EventAttributes) => {
+      const event = new Event(data, data.sourceFrameRate, data.recordFrameRate);
+      this.events.push(event);
+    });
 
     const rl = createInterface({
       input,
@@ -58,12 +62,14 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     });
 
     return new Promise((resolve, reject) => {
-      rl.on('line', (line) => parser.push(line));
-      rl.on('error', (error) => reject(error));
-      rl.on('close', () => parser.end());
+      rl
+        .on('line', (line) => parser.write(line))
+        .on('error', (error) => reject(error))
+        .on('close', () => parser.end());
 
-      parser.on('error', (error) => reject(error));
-      parser.on('end', () => resolve(this));
+      parser
+        .on('error', (error) => reject(error))
+        .on('end', () => resolve(this));
     });
   }
 

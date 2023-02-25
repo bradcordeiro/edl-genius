@@ -32,6 +32,10 @@ export default class EditDecisionList {
     }
     async readStream(input) {
         const parser = this.getParser();
+        parser.on('data', (data) => {
+            const event = new Event(data, data.sourceFrameRate, data.recordFrameRate);
+            this.events.push(event);
+        });
         const rl = createInterface({
             input,
             crlfDelay: Infinity,
@@ -39,11 +43,13 @@ export default class EditDecisionList {
             historySize: 0,
         });
         return new Promise((resolve, reject) => {
-            rl.on('line', (line) => parser.push(line));
-            rl.on('error', (error) => reject(error));
-            rl.on('close', () => parser.end());
-            parser.on('error', (error) => reject(error));
-            parser.on('end', () => resolve(this));
+            rl
+                .on('line', (line) => parser.write(line))
+                .on('error', (error) => reject(error))
+                .on('close', () => parser.end());
+            parser
+                .on('error', (error) => reject(error))
+                .on('end', () => resolve(this));
         });
     }
     async readBuffer(buf, encoding = 'utf8') {
