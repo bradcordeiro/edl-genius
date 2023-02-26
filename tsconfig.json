@@ -3,7 +3,7 @@
   "exclude": ["./lib/**/*.test.ts"],
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "module": "ES6",
+    "module": "UMD",
     "declaration": true,
     "outDir": "./dist"
   }
