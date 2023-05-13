@@ -1,6 +1,6 @@
 import { Transform } from 'stream';
 import Timecode from 'timecode-boss';
-import { type EventAttributes } from './Event.js';
+import { type EventAttributes } from './Event';
 
 const CMX_FRAME_RATE_LINE_BEGINNING = 'F';
 const CMX_MOTION_EFFECT_LINE_BEGINNING = 'M';
