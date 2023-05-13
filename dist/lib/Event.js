@@ -7,13 +7,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "timecode-boss", "./MotionEffect.js"], factory);
+        define(["require", "exports", "timecode-boss", "./MotionEffect"], factory);
     }
 })(function (require, exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: true });
     const timecode_boss_1 = __importDefault(require("timecode-boss"));
-    const MotionEffect_js_1 = __importDefault(require("./MotionEffect.js"));
+    const MotionEffect_1 = __importDefault(require("./MotionEffect"));
     class Event {
         constructor(input = {}, sourceFrameRate = 29.97, recordFrameRate = 29.97) {
             this.sourceFrameRate = sourceFrameRate;
@@ -29,10 +29,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             this.sourceEnd = input.sourceEnd ? new timecode_boss_1.default(input.sourceEnd, sourceFrameRate) : new timecode_boss_1.default({}, sourceFrameRate);
             this.recordStart = input.recordStart ? new timecode_boss_1.default(input.recordStart, recordFrameRate) : new timecode_boss_1.default({}, recordFrameRate);
             this.recordEnd = input.recordEnd ? new timecode_boss_1.default(input.recordEnd, recordFrameRate) : new timecode_boss_1.default({}, recordFrameRate);
-            this.motionEffect = input.motionEffect ? new MotionEffect_js_1.default(input.motionEffect) : undefined;
+            this.motionEffect = input.motionEffect ? new MotionEffect_1.default(input.motionEffect) : undefined;
         }
         setMotionEffect(input) {
-            this.motionEffect = new MotionEffect_js_1.default(input);
+            this.motionEffect = new MotionEffect_1.default(input);
         }
         addComment(input) {
             const parsedComment = { comment: input };

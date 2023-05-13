@@ -1,7 +1,7 @@
 /// <reference types="node" />
 /// <reference types="node" />
 import { Readable } from 'stream';
-import Event, { EventAttributes } from './Event.js';
+import Event, { EventAttributes } from './Event';
 export interface EditDecisionListAttributes {
     frameRate: number;
     type: string;

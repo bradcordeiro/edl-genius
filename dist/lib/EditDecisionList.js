@@ -7,7 +7,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         if (v !== undefined) module.exports = v;
     }
     else if (typeof define === "function" && define.amd) {
-        define(["require", "exports", "fs", "readline", "stream", "./Event.js", "./CMX3600Parser.js"], factory);
+        define(["require", "exports", "fs", "readline", "stream", "./Event", "./CMX3600Parser"], factory);
     }
 })(function (require, exports) {
     "use strict";
@@ -15,8 +15,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     const fs_1 = require("fs");
     const readline_1 = require("readline");
     const stream_1 = require("stream");
-    const Event_js_1 = __importDefault(require("./Event.js"));
-    const CMX3600Parser_js_1 = __importDefault(require("./CMX3600Parser.js"));
+    const Event_1 = __importDefault(require("./Event"));
+    const CMX3600Parser_1 = __importDefault(require("./CMX3600Parser"));
     function getBasicStream(contents) {
         if (Array.isArray(contents)) {
             return new stream_1.Readable({
@@ -41,13 +41,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
             switch (this.type) {
                 case 'cmx3600':
                 default:
-                    return new CMX3600Parser_js_1.default(this.frameRate);
+                    return new CMX3600Parser_1.default(this.frameRate);
             }
         }
         async readStream(input) {
             const parser = this.getParser();
             parser.on('data', (data) => {
-                const event = new Event_js_1.default(data, data.sourceFrameRate, data.recordFrameRate);
+                const event = new Event_1.default(data, data.sourceFrameRate, data.recordFrameRate);
                 this.events.push(event);
             });
             const rl = (0, readline_1.createInterface)({
@@ -79,7 +79,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
         async fromObject(obj) {
             this.frameRate = obj.frameRate;
             this.type = obj.type;
-            this.events = obj.events.map(((e) => new Event_js_1.default(e)));
+            this.events = obj.events.map(((e) => new Event_1.default(e)));
             return this;
         }
         async read(input) {
