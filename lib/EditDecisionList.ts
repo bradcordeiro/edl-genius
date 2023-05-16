@@ -1,8 +1,8 @@
 import { createReadStream } from 'fs';
 import { createInterface } from 'readline';
 import { Readable } from 'stream';
-import Event, { EventAttributes } from './Event';
-import CMX3600Parser from './CMX3600Parser';
+import Event, { EventAttributes } from './Event.js';
+import CMX3600Parser from './CMX3600Parser.js';
 
 function getBasicStream(contents?: string | string[]) {
   if (Array.isArray(contents)) {

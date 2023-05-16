@@ -1,5 +1,5 @@
 import Timecode from 'timecode-boss';
-import MotionEffect, { type MotionEffectAttributes } from './MotionEffect';
+import MotionEffect, { type MotionEffectAttributes } from './MotionEffect.js';
 export type EventAttributes = {
     number?: number;
     reel?: string;
