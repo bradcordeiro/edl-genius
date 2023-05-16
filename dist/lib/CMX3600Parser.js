@@ -28,7 +28,7 @@ export default class CMX3600Parser extends Transform {
     }
     parseEvent(input) {
         const matches = CMX_EVENT_REGEX.exec(input);
-        if (matches === null || matches.length !== 9) {
+        if (!matches || matches.length !== 9) {
             return;
         }
         const [, number, reel, track, transition, sourceStart, sourceEnd, recordStart, recordEnd,] = matches;
