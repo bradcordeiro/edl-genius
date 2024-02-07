@@ -168,14 +168,17 @@ var EditDecisionList = (function () {
         filtered.events = this.events.filter(function (event, index) {
             if (index === 0)
                 return true;
-            if (event.reel === _this.events[index - 1].reel
-                && event.trackType === _this.events[index - 1].trackType
-                && event.sourceClip === _this.events[index - 1].sourceClip
-                && event.sourceFile === _this.events[index - 1].sourceFile
-                && event.sourceStart.toString() === _this.events[index - 1].sourceStart.toString()
-                && event.sourceEnd.toString() === _this.events[index - 1].sourceEnd.toString()
-                && event.recordStart.toString() === _this.events[index - 1].recordStart.toString()
-                && event.recordEnd.toString() === _this.events[index - 1].recordEnd.toString())
+            var prevEvent = _this.events[index - 1];
+            if (!prevEvent)
+                return true;
+            if (event.reel === prevEvent.reel
+                && event.trackType === prevEvent.trackType
+                && event.sourceClip === prevEvent.sourceClip
+                && event.sourceFile === prevEvent.sourceFile
+                && event.sourceStart.toString() === prevEvent.sourceStart.toString()
+                && event.sourceEnd.toString() === prevEvent.sourceEnd.toString()
+                && event.recordStart.toString() === prevEvent.recordStart.toString()
+                && event.recordEnd.toString() === prevEvent.recordEnd.toString())
                 return false;
             return true;
         });

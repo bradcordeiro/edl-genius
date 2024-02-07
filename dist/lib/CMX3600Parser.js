@@ -56,6 +56,13 @@ var CMX3600Parser = (function (_super) {
         var number = matches[1], reel = matches[2], track = matches[3], transition = matches[4], sourceStart = matches[5], sourceEnd = matches[6], recordStart = matches[7], recordEnd = matches[8];
         var trackType;
         var tn;
+        if (!track
+            || !number
+            || !sourceStart
+            || !sourceEnd
+            || !recordStart
+            || !recordEnd)
+            return;
         var trackTypeMatches = /([AV/]+)(\d+)?/.exec(track);
         if (trackTypeMatches) {
             trackType = trackTypeMatches[1], tn = trackTypeMatches[2];
@@ -80,7 +87,7 @@ var CMX3600Parser = (function (_super) {
         var matches = CMX_SOURCE_FILE_REGEX.exec(input);
         if (matches && matches.length > 1) {
             var sourceFile = matches[1];
-            if (this.currentEvent)
+            if (this.currentEvent && sourceFile)
                 this.currentEvent.sourceFile = sourceFile.trim();
         }
     };
@@ -88,7 +95,7 @@ var CMX3600Parser = (function (_super) {
         var matches = CMX_SOURCE_CLIP_REGEX.exec(input);
         if (matches && matches.length > 1) {
             var sourceClip = matches[1];
-            if (this.currentEvent)
+            if (this.currentEvent && sourceClip)
                 this.currentEvent.sourceClip = sourceClip.trim();
         }
     };
@@ -96,7 +103,7 @@ var CMX3600Parser = (function (_super) {
         var matches = CMX_TO_CLIP_REGEX.exec(input);
         if (matches && matches.length > 1) {
             var toClip = matches[1];
-            if (this.currentEvent)
+            if (this.currentEvent && toClip)
                 this.currentEvent.toClip = toClip.trim();
         }
     };
@@ -114,10 +121,10 @@ var CMX3600Parser = (function (_super) {
             var matches = CMX_COMMENT_REGEX.exec(line);
             if (matches && matches.length > 1 && this.currentEvent) {
                 var comment = matches[1];
-                if (this.currentEvent.comment) {
+                if (this.currentEvent.comment && !!comment) {
                     this.currentEvent.comment += comment.trim();
                 }
-                else {
+                else if (comment) {
                     this.currentEvent.comment = comment.trim();
                 }
             }
@@ -127,9 +134,11 @@ var CMX3600Parser = (function (_super) {
         var matches = CMX_MOTION_EFFECT_REGEX.exec(line);
         if (matches && matches.length > 3) {
             var reel = matches[1], s = matches[2], e = matches[3];
-            var speed = parseFloat(s);
-            if (this.currentEvent)
-                this.currentEvent.motionEffect = { reel: reel, speed: speed, entryPoint: new timecode_boss_1.default(e) };
+            if (reel && e && s) {
+                var speed = parseFloat(s);
+                if (this.currentEvent)
+                    this.currentEvent.motionEffect = { reel: reel, speed: speed, entryPoint: new timecode_boss_1.default(e) };
+            }
         }
     };
     CMX3600Parser.prototype.parseNextEvent = function (line) {
@@ -144,6 +153,7 @@ var CMX3600Parser = (function (_super) {
     CMX3600Parser.prototype._transform = function (obj, enc, callback) {
         if (callback === void 0) { callback = function () { }; }
         var line = typeof obj === 'string' ? obj : obj.toString();
+        var p = enc;
         if (line[0] === CMX_MOTION_EFFECT_LINE_BEGINNING) {
             this.parseMotionEffect(line);
         }
