@@ -7,7 +7,7 @@
   "main": "./dist/index.js",
   "type": "commonjs",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "test": "mocha ./dist/test/index.js",
     "test-coverage": "nyc mocha ./dist/test/index.js"
   },

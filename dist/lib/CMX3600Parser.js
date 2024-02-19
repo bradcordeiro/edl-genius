@@ -153,7 +153,6 @@ var CMX3600Parser = (function (_super) {
     CMX3600Parser.prototype._transform = function (obj, enc, callback) {
         if (callback === void 0) { callback = function () { }; }
         var line = typeof obj === 'string' ? obj : obj.toString();
-        var p = enc;
         if (line[0] === CMX_MOTION_EFFECT_LINE_BEGINNING) {
             this.parseMotionEffect(line);
         }

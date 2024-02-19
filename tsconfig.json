@@ -2,6 +2,7 @@
   "compilerOptions": {
     // "sourceMap": true, 
     // "sourceRoot": "./", 
+    "skipLibCheck": true,
     "rootDir": ".",
     "outDir": "dist",
     "removeComments": true,
