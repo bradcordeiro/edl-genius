@@ -18,7 +18,9 @@ var Event = (function () {
         this.transition = input.transition;
         this.sourceClip = input.sourceClip;
         this.sourceFile = input.sourceFile;
+        this.toClip = input.toClip;
         this.comment = input.comment;
+        this.marker = {};
         this.sourceStart = input.sourceStart ? new timecode_boss_1.default(input.sourceStart, sourceFrameRate) : new timecode_boss_1.default({}, sourceFrameRate);
         this.sourceEnd = input.sourceEnd ? new timecode_boss_1.default(input.sourceEnd, sourceFrameRate) : new timecode_boss_1.default({}, sourceFrameRate);
         this.recordStart = input.recordStart ? new timecode_boss_1.default(input.recordStart, recordFrameRate) : new timecode_boss_1.default({}, recordFrameRate);
@@ -57,6 +59,7 @@ var Event = (function () {
             recordEnd: this.recordEnd.toObject(),
             sourceClip: this.sourceClip,
             sourceFile: this.sourceFile,
+            toClip: this.toClip,
             motionEffect: this.motionEffect ? this.motionEffect.toObject() : undefined,
             comment: this.comment,
         };
