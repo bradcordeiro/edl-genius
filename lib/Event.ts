@@ -20,6 +20,11 @@ export type EventAttributes = {
   recordFrameRate?: number;
 };
 
+export type Marker = {
+  in?: Timecode;
+  pips?: { name: string, frames: number }[]
+};
+
 export default class Event implements EventAttributes {
   number?: number;
 
@@ -32,6 +37,8 @@ export default class Event implements EventAttributes {
   transition?: string;
 
   toClip?: string;
+
+  markers?: Marker[];
 
   sourceStart: Timecode;
 
@@ -62,7 +69,9 @@ export default class Event implements EventAttributes {
     this.transition = input.transition;
     this.sourceClip = input.sourceClip;
     this.sourceFile = input.sourceFile;
+    this.toClip = input.toClip;
     this.comment = input.comment;
+    this.markers = [];
 
     this.sourceStart = input.sourceStart ? new Timecode(input.sourceStart, sourceFrameRate) : new Timecode({}, sourceFrameRate);
     this.sourceEnd = input.sourceEnd ? new Timecode(input.sourceEnd, sourceFrameRate) : new Timecode({}, sourceFrameRate);
@@ -103,6 +112,7 @@ export default class Event implements EventAttributes {
       recordEnd: this.recordEnd.toObject(),
       sourceClip: this.sourceClip,
       sourceFile: this.sourceFile,
+      toClip: this.toClip,
       motionEffect: this.motionEffect ? this.motionEffect.toObject() : undefined,
       comment: this.comment,
     };

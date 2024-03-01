@@ -3,10 +3,11 @@
   "version": "4.2.3",
   "description": "An ES6 module to work with Edit Decision Lists",
   "license": "MIT",
+  "module": "./index.ts",
   "main": "./dist/index.js",
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc",
     "test": "mocha ./dist/test/index.js",
     "test-coverage": "nyc mocha ./dist/test/index.js"
   },
@@ -16,20 +17,20 @@
     "url": "http://www.bradc.com/"
   },
   "dependencies": {
-    "timecode-boss": "^6.0.0"
+    "timecode-boss": "^6.1.2"
   },
   "devDependencies": {
-    "@tsconfig/node16": "^1.0.3",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^17.0.18",
-    "@typescript-eslint/eslint-plugin": "^5.12.0",
-    "@typescript-eslint/parser": "^5.12.0",
-    "eslint": "^7.32.0",
-    "eslint-config-airbnb-base": "^14.2.1",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.16",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-base-typescript": "^1.1.0",
-    "eslint-config-airbnb-typescript": "^16.1.0",
-    "eslint-plugin-import": "^2.25.4",
+    "eslint-config-airbnb-typescript": "^17.1.0",
+    "eslint-plugin-import": "^2.29.1",
     "mocha": "^10.2.0",
-    "nyc": "^15.1.0"
+    "nyc": "^15.1.0",
+    "typescript": "^5.3.3"
   }
 }

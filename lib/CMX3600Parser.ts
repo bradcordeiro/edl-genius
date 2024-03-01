@@ -60,8 +60,14 @@ export default class CMX3600Parser extends Transform {
 
     let trackType: string | undefined;
     let tn: string | undefined;
-
-    const trackTypeMatches = /([AV/]+)(\d+)?/.exec(track);
+    if (
+      !track
+      || !number
+      || !sourceStart
+      || !sourceEnd
+      || !recordStart
+      || !recordEnd
+    ) return; const trackTypeMatches = /([AV/]+)(\d+)?/.exec(track);
     if (trackTypeMatches) {
       [, trackType, tn] = trackTypeMatches;
     }
@@ -88,7 +94,7 @@ export default class CMX3600Parser extends Transform {
 
     if (matches && matches.length > 1) {
       const [, sourceFile] = matches;
-      if (this.currentEvent) this.currentEvent.sourceFile = sourceFile.trim();
+      if (this.currentEvent && sourceFile) this.currentEvent.sourceFile = sourceFile.trim();
     }
   }
 
@@ -97,7 +103,7 @@ export default class CMX3600Parser extends Transform {
 
     if (matches && matches.length > 1) {
       const [, sourceClip] = matches;
-      if (this.currentEvent) this.currentEvent.sourceClip = sourceClip.trim();
+      if (this.currentEvent && sourceClip) this.currentEvent.sourceClip = sourceClip.trim();
     }
   }
 
@@ -106,7 +112,7 @@ export default class CMX3600Parser extends Transform {
 
     if (matches && matches.length > 1) {
       const [, toClip] = matches;
-      if (this.currentEvent) this.currentEvent.toClip = toClip.trim();
+      if (this.currentEvent && toClip) this.currentEvent.toClip = toClip.trim();
     }
   }
 
@@ -121,9 +127,9 @@ export default class CMX3600Parser extends Transform {
       const matches = CMX_COMMENT_REGEX.exec(line);
       if (matches && matches.length > 1 && this.currentEvent) {
         const [, comment] = matches;
-        if (this.currentEvent.comment) {
+        if (this.currentEvent.comment && !!comment) {
           this.currentEvent.comment += comment.trim();
-        } else {
+        } else if (comment) {
           this.currentEvent.comment = comment.trim();
         }
       }
@@ -135,8 +141,10 @@ export default class CMX3600Parser extends Transform {
 
     if (matches && matches.length > 3) {
       const [, reel, s, e] = matches;
-      const speed = parseFloat(s);
-      if (this.currentEvent) this.currentEvent.motionEffect = { reel, speed, entryPoint: new Timecode(e) };
+      if (reel && e && s) {
+        const speed = parseFloat(s);
+        if (this.currentEvent) this.currentEvent.motionEffect = { reel, speed, entryPoint: new Timecode(e) };
+      }
     }
   }
 
@@ -153,7 +161,6 @@ export default class CMX3600Parser extends Transform {
 
   _transform(obj: string | Buffer, enc: string, callback = () => {}) {
     const line = typeof obj === 'string' ? obj : obj.toString();
-
     if (line[0] === CMX_MOTION_EFFECT_LINE_BEGINNING) {
       this.parseMotionEffect(line);
     } else if (line[0] === CMX_COMMENT_LINE_BEGINNING) {

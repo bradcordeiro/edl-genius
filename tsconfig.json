@@ -1,10 +1,17 @@
 {
-  "include": ["index.ts", "./lib/**/*.ts", "test/**/*.ts"],
-  "exclude": ["./lib/**/*.test.ts"],
-  "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
-    "module": "ES6",
+    // "sourceMap": true, 
+    // "sourceRoot": "./", 
+    "skipLibCheck": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "removeComments": true,
     "declaration": true,
-    "outDir": "./dist"
-  }
+    "esModuleInterop": true,
+    "target": "es5",
+    "module": "commonjs"
+  },
+  "exclude": [
+    "node_modules"
+  ]
 }

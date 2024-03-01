@@ -18,6 +18,13 @@ export type EventAttributes = {
     sourceFrameRate?: number;
     recordFrameRate?: number;
 };
+export type Marker = {
+    in?: Timecode;
+    pips?: {
+        name: string;
+        frames: number;
+    }[];
+};
 export default class Event implements EventAttributes {
     number?: number;
     reel?: string;
@@ -25,6 +32,7 @@ export default class Event implements EventAttributes {
     trackNumber?: number;
     transition?: string;
     toClip?: string;
+    markers?: Marker[];
     sourceStart: Timecode;
     sourceEnd: Timecode;
     recordStart: Timecode;
