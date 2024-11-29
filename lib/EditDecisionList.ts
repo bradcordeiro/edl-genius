@@ -101,7 +101,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     if (input instanceof Buffer) return this.readBuffer(input);
     if (typeof input === 'string') return this.readString(input);
 
-    return this.fromObject(input);
+    return this.fromObject(input as EditDecisionListAttributes);
   }
 
   async readFile(inputFile: string) : Promise<this> {
