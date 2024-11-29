@@ -1,4 +1,6 @@
-import './EditDecisionList.test.js';
-import './MotionEffect.test.js';
-import './Event.test.js';
-import './CMX3600Parser.test.js';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+require("./EditDecisionList.test.js");
+require("./MotionEffect.test.js");
+require("./Event.test.js");
+require("./CMX3600Parser.test.js");

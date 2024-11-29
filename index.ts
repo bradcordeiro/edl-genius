@@ -1,6 +1,8 @@
-import EDL from './lib/EditDecisionList.js';
-import Event from './lib/Event.js';
-import MotionEffect from './lib/MotionEffect.js';
+import EDL from './lib/EditDecisionList';
+import Event from './lib/Event';
+import MotionEffect from './lib/MotionEffect';
+
+export * from './lib/Event';
 
 export default EDL;
 

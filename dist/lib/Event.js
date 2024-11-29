@@ -1,7 +1,15 @@
-import Timecode from 'timecode-boss';
-import MotionEffect from './MotionEffect.js';
-export default class Event {
-    constructor(input = {}, sourceFrameRate = 29.97, recordFrameRate = 29.97) {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var timecode_boss_1 = __importDefault(require("timecode-boss"));
+var MotionEffect_js_1 = __importDefault(require("./MotionEffect.js"));
+var Event = (function () {
+    function Event(input, sourceFrameRate, recordFrameRate) {
+        if (input === void 0) { input = {}; }
+        if (sourceFrameRate === void 0) { sourceFrameRate = 29.97; }
+        if (recordFrameRate === void 0) { recordFrameRate = 29.97; }
         this.sourceFrameRate = sourceFrameRate;
         this.recordFrameRate = recordFrameRate;
         this.number = input.number;
@@ -10,18 +18,20 @@ export default class Event {
         this.transition = input.transition;
         this.sourceClip = input.sourceClip;
         this.sourceFile = input.sourceFile;
+        this.toClip = input.toClip;
         this.comment = input.comment;
-        this.sourceStart = input.sourceStart ? new Timecode(input.sourceStart, sourceFrameRate) : new Timecode({}, sourceFrameRate);
-        this.sourceEnd = input.sourceEnd ? new Timecode(input.sourceEnd, sourceFrameRate) : new Timecode({}, sourceFrameRate);
-        this.recordStart = input.recordStart ? new Timecode(input.recordStart, recordFrameRate) : new Timecode({}, recordFrameRate);
-        this.recordEnd = input.recordEnd ? new Timecode(input.recordEnd, recordFrameRate) : new Timecode({}, recordFrameRate);
-        this.motionEffect = input.motionEffect ? new MotionEffect(input.motionEffect) : undefined;
+        this.markers = [];
+        this.sourceStart = input.sourceStart ? new timecode_boss_1.default(input.sourceStart, sourceFrameRate) : new timecode_boss_1.default({}, sourceFrameRate);
+        this.sourceEnd = input.sourceEnd ? new timecode_boss_1.default(input.sourceEnd, sourceFrameRate) : new timecode_boss_1.default({}, sourceFrameRate);
+        this.recordStart = input.recordStart ? new timecode_boss_1.default(input.recordStart, recordFrameRate) : new timecode_boss_1.default({}, recordFrameRate);
+        this.recordEnd = input.recordEnd ? new timecode_boss_1.default(input.recordEnd, recordFrameRate) : new timecode_boss_1.default({}, recordFrameRate);
+        this.motionEffect = input.motionEffect ? new MotionEffect_js_1.default(input.motionEffect) : undefined;
     }
-    setMotionEffect(input) {
-        this.motionEffect = new MotionEffect(input);
-    }
-    addComment(input) {
-        const parsedComment = { comment: input };
+    Event.prototype.setMotionEffect = function (input) {
+        this.motionEffect = new MotionEffect_js_1.default(input);
+    };
+    Event.prototype.addComment = function (input) {
+        var parsedComment = { comment: input };
         if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceFile')) {
             this.sourceFile = parsedComment.sourceFile;
         }
@@ -34,8 +44,8 @@ export default class Event {
         else if (parsedComment.comment) {
             this.comment = parsedComment.comment.trim();
         }
-    }
-    toObject() {
+    };
+    Event.prototype.toObject = function () {
         return {
             sourceFrameRate: this.sourceFrameRate,
             recordFrameRate: this.recordFrameRate,
@@ -49,8 +59,11 @@ export default class Event {
             recordEnd: this.recordEnd.toObject(),
             sourceClip: this.sourceClip,
             sourceFile: this.sourceFile,
+            toClip: this.toClip,
             motionEffect: this.motionEffect ? this.motionEffect.toObject() : undefined,
             comment: this.comment,
         };
-    }
-}
+    };
+    return Event;
+}());
+exports.default = Event;
