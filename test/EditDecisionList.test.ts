@@ -89,6 +89,18 @@ describe('EditDecisionList Class', function () {
       assert.strictEqual(dropFramEvent.sourceStart.toString(), '01:31:42;26');
     });
 
+    it('Should ignore "FCM: XXX" when frame rate is 23.98', async function () {
+      const edl = new EditDecisionList(23.98);
+      await edl.readFile('./test/edl_files/pull001_201109_exr.edl');
+
+      assert.strictEqual(edl.events[0].sourceStart.frameRate, 23.98);
+      assert.strictEqual(edl.events[1].sourceStart.frameRate, 23.98);
+      assert.strictEqual(edl.events[2].sourceStart.frameRate, 23.98);
+      assert.strictEqual(edl.events[0].sourceEnd.frameRate, 23.98);
+      assert.strictEqual(edl.events[1].sourceEnd.frameRate, 23.98);
+      assert.strictEqual(edl.events[2].sourceEnd.frameRate, 23.98);
+    });
+
     it('Should ignore "FCM: XXX" when frame rate is 24', async function () {
       const edl = new EditDecisionList(24);
       await edl.readFile('./test/edl_files/pull001_201109_exr.edl');
@@ -96,6 +108,18 @@ describe('EditDecisionList Class', function () {
       assert.strictEqual(edl.events[0].sourceStart.toString(), '08:12:57:14');
       assert.strictEqual(edl.events[1].sourceStart.toString(), '10:01:05:16');
       assert.strictEqual(edl.events[2].sourceStart.toString(), '10:37:07:02');
+    });
+
+    it('Should ignore "FCM: XXX" when frame rate is 25', async function () {
+      const edl = new EditDecisionList(25);
+      await edl.readFile('./test/edl_files/pull001_201109_exr.edl');
+
+      assert.strictEqual(edl.events[0].sourceStart.frameRate, 25);
+      assert.strictEqual(edl.events[1].sourceStart.frameRate, 25);
+      assert.strictEqual(edl.events[2].sourceStart.frameRate, 25);
+      assert.strictEqual(edl.events[0].sourceEnd.frameRate, 25);
+      assert.strictEqual(edl.events[1].sourceEnd.frameRate, 25);
+      assert.strictEqual(edl.events[2].sourceEnd.frameRate, 25);
     });
 
     it('toObject() should return an object', async function () {

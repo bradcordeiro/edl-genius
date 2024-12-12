@@ -18,12 +18,28 @@ export default class CMX3600Parser extends Transform {
         this.recordFrameRate = recordFrameRate;
         this.sourceFrameRate = recordFrameRate;
     }
+    changeSourceFrameRateToDropFrame() {
+        if (this.sourceFrameRate > 29 && this.sourceFrameRate <= 30) {
+            this.sourceFrameRate = 30000 / 1001;
+        }
+        else if (this.sourceFrameRate > 59 && this.sourceFrameRate <= 60) {
+            this.sourceFrameRate = 60000 / 1001;
+        }
+    }
+    changeSourceFrameRateToNonDropFrame() {
+        if (this.sourceFrameRate > 29 && this.sourceFrameRate <= 30) {
+            this.sourceFrameRate = 30;
+        }
+        if (this.sourceFrameRate > 59 && this.sourceFrameRate <= 60) {
+            this.sourceFrameRate = 60;
+        }
+    }
     changeFrameRate(line) {
         if (line === 'FCM: NON-DROP FRAME') {
-            this.sourceFrameRate = Math.ceil(this.sourceFrameRate);
+            this.changeSourceFrameRateToNonDropFrame();
         }
-        if (line === 'FCM: DROP FRAME') {
-            this.sourceFrameRate = (this.sourceFrameRate * 1000) / 1001;
+        else if (line === 'FCM: DROP FRAME') {
+            this.changeSourceFrameRateToDropFrame();
         }
     }
     parseEvent(input) {

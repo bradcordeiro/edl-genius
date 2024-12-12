@@ -6,6 +6,8 @@ export default class CMX3600Parser extends Transform {
     private sourceFrameRate;
     private currentEvent;
     constructor(recordFrameRate?: number);
+    private changeSourceFrameRateToDropFrame;
+    private changeSourceFrameRateToNonDropFrame;
     private changeFrameRate;
     private parseEvent;
     private parseSourceFileLine;
