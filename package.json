@@ -11,6 +11,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig-build.json",
+    "lint": "eslint .",
     "test": "mocha",
     "test:watch": "mocha --watch",
     "test:coverage": "nyc mocha --experimental-loader=@istanbuljs/esm-loader-hook"
