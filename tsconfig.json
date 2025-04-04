@@ -1,6 +1,5 @@
 {
-  "include": ["index.ts", "./lib/**/*.ts", "test/**/*.ts"],
-  "exclude": ["./lib/**/*.test.ts"],
+  "include": ["lib", "test"],
   "extends": "@tsconfig/node16/tsconfig.json",
   "compilerOptions": {
     "module": "ES6",

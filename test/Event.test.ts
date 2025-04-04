@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import assert from 'assert';
 import Timecode from 'timecode-boss';
-import Event from '../lib/Event.js';
+import Event from '../lib/Event';
 
 describe('Event Class', () => {
   it('new Event() should create an empty event', () => {

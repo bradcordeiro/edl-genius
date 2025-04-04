@@ -3,7 +3,7 @@
 /* eslint-disable func-names */
 import * as fs from 'fs';
 import assert from 'assert';
-import EditDecisionList from '../lib/EditDecisionList.js';
+import EditDecisionList from '../lib/EditDecisionList';
 
 describe('EditDecisionList Class', function () {
   describe('Constructor', function () {

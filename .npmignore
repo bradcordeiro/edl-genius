@@ -1,3 +1,9 @@
 test
 .eslintrc.json
 .travis.yml
+.mocharc.json
+tsconfig-build.json
+tsconfig.json
+lib
+.nyc_output
+coverage

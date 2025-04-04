@@ -1,5 +1,5 @@
 import Timecode from 'timecode-boss';
-import MotionEffect from './MotionEffect.js';
+import MotionEffect from './MotionEffect';
 export default class Event {
     constructor(input = {}, sourceFrameRate = 29.97, recordFrameRate = 29.97) {
         this.sourceFrameRate = sourceFrameRate;

@@ -1,5 +1,3 @@
-/// <reference types="node" />
-/// <reference types="node" />
 import { Transform } from 'stream';
 export default class CMX3600Parser extends Transform {
     private recordFrameRate;

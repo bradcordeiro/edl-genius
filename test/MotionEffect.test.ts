@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 import assert from 'assert';
 import Timecode from 'timecode-boss';
-import MotionEffect from '../lib/MotionEffect.js';
+import MotionEffect from '../lib/MotionEffect';
 
 describe('Motion Effect', () => {
   it('Should deep copy a MotionEffect passed to the constructor', () => {

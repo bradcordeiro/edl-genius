@@ -3,8 +3,8 @@
 /* eslint-disable func-names */
 import assert from 'assert';
 import { Readable } from 'stream';
-import CMX3600Parser from '../lib/CMX3600Parser.js';
-import { type EventAttributes } from '../lib/Event.js';
+import CMX3600Parser from '../lib/CMX3600Parser';
+import { type EventAttributes } from '../lib/Event';
 
 function getBasicStream(contents: string | string[]) : Readable {
   if (Array.isArray(contents)) {
