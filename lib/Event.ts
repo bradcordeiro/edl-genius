@@ -1,7 +1,10 @@
 import Timecode from 'timecode-boss';
-import MotionEffect, { type MotionEffectAttributes } from './MotionEffect.js';
 
-export type EventAttributes = {
+import MotionEffect from './MotionEffect.js';
+
+import type { MotionEffectAttributes } from './MotionEffect.js';
+
+export interface EventAttributes {
   number?: number;
   reel?: string;
   trackType?: string;
@@ -18,7 +21,7 @@ export type EventAttributes = {
   comment?: string;
   sourceFrameRate?: number;
   recordFrameRate?: number;
-};
+}
 
 export default class Event implements EventAttributes {
   number?: number;
@@ -71,16 +74,16 @@ export default class Event implements EventAttributes {
     this.motionEffect = input.motionEffect ? new MotionEffect(input.motionEffect) : undefined;
   }
 
-  setMotionEffect(input: MotionEffectAttributes) {
+  setMotionEffect(input: MotionEffectAttributes): void {
     this.motionEffect = new MotionEffect(input);
   }
 
-  addComment(input: string) {
+  addComment(input: string): void {
     const parsedComment: Pick<EventAttributes, 'comment' | 'sourceFile' | 'sourceClip'> = { comment: input };
 
-    if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceFile')) {
+    if (parsedComment.sourceFile) {
       this.sourceFile = parsedComment.sourceFile;
-    } else if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceClip')) {
+    } else if (parsedComment.sourceClip) {
       this.sourceClip = parsedComment.sourceClip;
     } else if (this.comment && parsedComment.comment) {
       this.comment += parsedComment.comment.trim();
@@ -89,7 +92,7 @@ export default class Event implements EventAttributes {
     }
   }
 
-  toObject() : EventAttributes {
+  toObject(): EventAttributes {
     return {
       sourceFrameRate: this.sourceFrameRate,
       recordFrameRate: this.recordFrameRate,

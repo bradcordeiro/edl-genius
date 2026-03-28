@@ -1,8 +1,11 @@
-import { createReadStream } from 'fs';
-import { createInterface } from 'readline';
-import { Readable } from 'stream';
-import Event, { EventAttributes } from './Event.js';
+import { createReadStream } from 'node:fs';
+import { createInterface } from 'node:readline';
+import { Readable } from 'node:stream';
+
 import CMX3600Parser from './CMX3600Parser.js';
+import Event from './Event.js';
+
+import type { EventAttributes } from './Event.js';
 
 function getBasicStream(contents?: string | string[]) {
   if (Array.isArray(contents)) {
@@ -47,7 +50,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     }
   }
 
-  private async readStream(input: Readable) : Promise<this> {
+  private async readStream(input: Readable): Promise<this> {
     const parser = this.getParser();
     parser.on('data', (data: EventAttributes) => {
       const event = new Event(data, data.sourceFrameRate, data.recordFrameRate);
@@ -73,7 +76,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     });
   }
 
-  private async readBuffer(buf: Buffer, encoding: BufferEncoding = 'utf8') : Promise<this> {
+  private async readBuffer(buf: Buffer, encoding: BufferEncoding = 'utf8'): Promise<this> {
     const stream = getBasicStream();
 
     stream.push(buf, encoding);
@@ -82,13 +85,13 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     return this.readStream(stream);
   }
 
-  private async readString(str: string) : Promise<this> {
+  private async readString(str: string): Promise<this> {
     const buf = Buffer.from(str);
 
     return this.readBuffer(buf);
   }
 
-  private async fromObject(obj: EditDecisionListAttributes) : Promise<this> {
+  private async fromObject(obj: EditDecisionListAttributes): Promise<this> {
     this.frameRate = obj.frameRate;
     this.type = obj.type;
     this.events = obj.events.map(((e) => new Event(e)));
@@ -96,7 +99,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     return this;
   }
 
-  async read(input: Readable | Buffer | string | EditDecisionListAttributes) : Promise<this> {
+  async read(input: Readable | Buffer | string | EditDecisionListAttributes): Promise<this> {
     if (input instanceof Readable) return this.readStream(input);
     if (input instanceof Buffer) return this.readBuffer(input);
     if (typeof input === 'string') return this.readString(input);
@@ -104,13 +107,13 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     return this.fromObject(input);
   }
 
-  async readFile(inputFile: string) : Promise<this> {
+  async readFile(inputFile: string): Promise<this> {
     const input = createReadStream(inputFile);
 
     return this.readStream(input);
   }
 
-  toObject() : EditDecisionListAttributes {
+  toObject(): EditDecisionListAttributes {
     return {
       frameRate: this.frameRate,
       type: this.type,
@@ -118,7 +121,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
     };
   }
 
-  filterDuplicateMultitrack() : EditDecisionList {
+  filterDuplicateMultitrack(): EditDecisionList {
     const filtered = new EditDecisionList(this.frameRate);
 
     filtered.events = this.events.filter((event, index) => {

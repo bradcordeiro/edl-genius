@@ -22,10 +22,10 @@ export default class Event {
     }
     addComment(input) {
         const parsedComment = { comment: input };
-        if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceFile')) {
+        if (parsedComment.sourceFile) {
             this.sourceFile = parsedComment.sourceFile;
         }
-        else if (Object.prototype.hasOwnProperty.call(parsedComment, 'sourceClip')) {
+        else if (parsedComment.sourceClip) {
             this.sourceClip = parsedComment.sourceClip;
         }
         else if (this.comment && parsedComment.comment) {

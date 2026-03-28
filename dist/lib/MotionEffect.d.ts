@@ -1,4 +1,5 @@
-import Timecode, { TimecodeAttributes } from 'timecode-boss';
+import Timecode from 'timecode-boss';
+import type { TimecodeAttributes } from 'timecode-boss';
 export interface MotionEffectAttributes {
     reel: string;
     speed: number;

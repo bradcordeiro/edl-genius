@@ -1,6 +1,7 @@
 import Timecode from 'timecode-boss';
-import MotionEffect, { type MotionEffectAttributes } from './MotionEffect.js';
-export type EventAttributes = {
+import MotionEffect from './MotionEffect.js';
+import type { MotionEffectAttributes } from './MotionEffect.js';
+export interface EventAttributes {
     number?: number;
     reel?: string;
     trackType?: string;
@@ -17,7 +18,7 @@ export type EventAttributes = {
     comment?: string;
     sourceFrameRate?: number;
     recordFrameRate?: number;
-};
+}
 export default class Event implements EventAttributes {
     number?: number;
     reel?: string;

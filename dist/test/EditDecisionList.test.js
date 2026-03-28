@@ -1,8 +1,8 @@
 /* eslint-env mocha */
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable func-names */
-import * as fs from 'fs';
-import assert from 'assert';
+import assert from 'node:assert';
+import { readFile } from 'node:fs/promises';
 import EditDecisionList from '../lib/EditDecisionList.js';
 describe('EditDecisionList Class', function () {
     describe('Constructor', function () {
@@ -63,7 +63,7 @@ describe('EditDecisionList Class', function () {
             });
             assert.strictEqual(event.motionEffect.entryPoint.toString(), '01:31:44;03');
             assert.strictEqual(event.sourceClip, 'QEVL1GRND130.NEW.01');
-            /* eslint-disable-next-line max-len */
+            /* eslint-disable-next-line @stylistic/max-len */
             assert.strictEqual(event.comment, 'GETTY IMAGES__QEVL1GRND130_UNDERGROUND_EL CHAPO TUNNELS_INTERIOR OF ALCATRAZ PRISON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302');
         });
         it('Should accurately set source frameRates when encountering "FCM: XXX" in 29.97/30', async function () {
@@ -132,7 +132,7 @@ describe('EditDecisionList Class', function () {
     describe('fromString', function () {
         it('Should find 9 events in text string from "cmx3600.edl"', async function () {
             const edl = new EditDecisionList(29.97);
-            /* eslint-disable-next-line max-len */
+            /* eslint-disable-next-line @stylistic/max-len */
             const edlstring = 'TITLE:   EDL Test SEQ \nFCM: DROP FRAME\n001  ACC112   V     C        01:49:40:01 01:49:46:18 01:00:00:00 01:00:06:17 \n* FROM CLIP NAME:  ACC112 WARBIRDS.NEW.01 \n* SOURCE FILE: ACC112 WARBIRDS\n002  IMG_6348 V     C        00:00:15:26 00:00:17:05 01:00:06:17 01:00:07:26 \n* FROM CLIP NAME:  IMG_6348.NEW.01 \n* SOURCE FILE: IMG_6348\n003  BOONE_SM V     C        01:01:43:05 01:01:57:00 01:00:07:26 01:00:21:21 \n* FROM CLIP NAME:  BOONE SMITH ON CAMERA HOST_-720P.NEW.01 \n* SOURCE FILE: BOONE SMITH ON CAMERA HOST_-720P\n004  BOONE_SM V     C        01:02:21:28 01:02:22:28 01:00:21:21 01:00:22:21 \n* FROM CLIP NAME:  BOONE SMITH ON CAMERA HOST_-720P.NEW.01 \n* TO CLIP NAME:  BOONE SMITH ON CAMERA HOST_-720P.NEW.01 \n* SOURCE FILE: BOONE SMITH ON CAMERA HOST_-720P\n005  BOONE_SM V     C        01:02:22:28 01:02:26:17 01:00:22:21 01:00:26:10 \n* FROM CLIP NAME:  BOONE SMITH ON CAMERA HOST_-720P.NEW.01 \n* SOURCE FILE: BOONE SMITH ON CAMERA HOST_-720P\n006  AQ100    V     C        00:02:18:05 00:02:28:10 01:00:26:10 01:00:31:13 \nM2   AQ100          059.6                00:02:18:05 \n* TIMEWARP EFFECT AT SEQUENCE TC 01;00;26;10. \n* FROM CLIP NAME:  DTB RE EDIT - HD 720P VIDEO SHARING.NEW.01 \n* SOURCE FILE: DTB RE EDIT - HD 720P VIDEO SHARING\n007  BR240    V     C        09:18:30:13 09:18:38:13 01:00:31:13 01:00:39:12 \nM2   BR240          024.0                09:18:30:13 \n* FROM CLIP NAME:  00004.NEW.01 \n* SOURCE FILE: 00004\n008  ACC112   V     C        01:50:58:03 01:51:00:27 01:00:38:14 01:00:41:06 \n* FROM CLIP NAME:  ACC112 WARBIRDS.NEW.01 \n* SOURCE FILE: ACC112 WARBIRDS\n009  KIRA_PAS V     C        01:01:25:14 01:01:32:07 01:00:40:25 01:00:47:15 \nM2   KIRA_PAS       024.0                01:01:25:14 \n* FROM CLIP NAME:  KIRA PASTA.NEW.01 \n* SOURCE FILE: KIRA PASTA';
             await edl.read(edlstring);
             assert.strictEqual(edl.events.length, 9);
@@ -140,7 +140,7 @@ describe('EditDecisionList Class', function () {
     });
     describe('fromBuffer', function () {
         it('should read from a buffer', async function () {
-            const buf = fs.readFileSync('./test/edl_files/12_16 TL01 MUSIC.edl');
+            const buf = await readFile('./test/edl_files/12_16 TL01 MUSIC.edl');
             const edl = new EditDecisionList(29.97);
             await edl.read(buf);
             assert.strictEqual(edl.events.length, 588);

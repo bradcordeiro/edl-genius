@@ -1,12 +1,14 @@
 /* eslint-env mocha */
 /* eslint-disable prefer-arrow-callback */
 /* eslint-disable func-names */
-import assert from 'assert';
-import { Readable } from 'stream';
-import CMX3600Parser from '../lib/CMX3600Parser.js';
-import { type EventAttributes } from '../lib/Event.js';
+import assert from 'node:assert';
+import { Readable } from 'node:stream';
 
-function getBasicStream(contents: string | string[]) : Readable {
+import CMX3600Parser from '../lib/CMX3600Parser.js';
+
+import type { EventAttributes } from '../lib/Event.js';
+
+function getBasicStream(contents: string | string[]): Readable {
   if (Array.isArray(contents)) {
     return new Readable({
       read() {
@@ -102,22 +104,30 @@ describe('CMX3600Parser', () => {
         assert.strictEqual(results[0].transition, 'C', 'Transition was not set.');
 
         if (results[0].sourceStart) {
-          assert.deepStrictEqual(results[0].sourceStart, { hours: 1, minutes: 1, seconds: 43, frames: 5, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
+          assert.deepStrictEqual(results[0].sourceStart, {
+            hours: 1, minutes: 1, seconds: 43, frames: 5, frameRate: 29.97,
+          });
         } else {
           assert.strictEqual(true, false, 'Source Start was not set.');
         }
         if (results[0].sourceEnd) {
-          assert.deepStrictEqual(results[0].sourceEnd, { hours: 1, minutes: 1, seconds: 57, frames: 0, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
+          assert.deepStrictEqual(results[0].sourceEnd, {
+            hours: 1, minutes: 1, seconds: 57, frames: 0, frameRate: 29.97,
+          });
         } else {
           assert.strictEqual(true, false, 'Source End was not set.');
         }
         if (results[0].recordStart) {
-          assert.deepStrictEqual(results[0].recordStart, { hours: 1, minutes: 0, seconds: 7, frames: 26, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
+          assert.deepStrictEqual(results[0].recordStart, {
+            hours: 1, minutes: 0, seconds: 7, frames: 26, frameRate: 29.97,
+          });
         } else {
           assert.strictEqual(true, false, 'Record Start was not set.');
         }
         if (results[0].recordEnd) {
-          assert.deepStrictEqual(results[0].recordEnd, { hours: 1, minutes: 0, seconds: 21, frames: 21, frameRate: 29.97 }); /* eslint-disable-line object-curly-newline */
+          assert.deepStrictEqual(results[0].recordEnd, {
+            hours: 1, minutes: 0, seconds: 21, frames: 21, frameRate: 29.97,
+          });
         } else {
           assert.strictEqual(true, false, 'Record End was not set.');
         }
@@ -192,7 +202,7 @@ describe('CMX3600Parser', () => {
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
-        /* eslint-disable-next-line max-len */
+        /* eslint-disable-next-line @stylistic/max-len */
         assert.strictEqual(results[0].comment, 'GETTY__QEVL1ESCP001_GREAT ESCAPES_MECKLENBURG SIX_AERIAL AROUND PRISON ON ALCATRAZ ISLAND _622-21');
         done();
       });

@@ -1,13 +1,15 @@
-import { Transform } from 'stream';
+import { Transform } from 'node:stream';
+
 import Timecode from 'timecode-boss';
-import { type EventAttributes } from './Event.js';
+
+import type { EventAttributes } from './Event.js';
 
 const CMX_FRAME_RATE_LINE_BEGINNING = 'F';
 const CMX_MOTION_EFFECT_LINE_BEGINNING = 'M';
 const CMX_EVENT_REGEX_LINE_BEGINNING = /^\d/;
 const CMX_COMMENT_LINE_BEGINNING = '*';
 
-/* eslint-disable-next-line max-len */
+/* eslint-disable-next-line @stylistic/max-len */
 const CMX_EVENT_REGEX = /^(\d+)\s+(\S+)\s+(\S+)\s+(\w+)\s+(?:\w+\s+)?(?:\w+\s+)?(\d{2}:\d{2}:\d{2}:\d{2})\s+(\d{2}:\d{2}:\d{2}:\d{2})\s+(\d{2}:\d{2}:\d{2}:\d{2})\s+(\d{2}:\d{2}:\d{2}:\d{2})/;
 const CMX_MOTION_EFFECT_REGEX = /^M2\s+(\w+)\s+(\S+)\s+(\d{2}:\d{2}:\d{2}:\d{2})(?:\s+)?$/;
 const CMX_SOURCE_FILE_REGEX = /^\*(?:\s+)?SOURCE FILE:\s+(.*)$/;
@@ -59,7 +61,7 @@ export default class CMX3600Parser extends Transform {
   private parseEvent(input: string) {
     const matches = CMX_EVENT_REGEX.exec(input);
 
-    if (!matches || matches.length !== 9) {
+    if (matches?.length !== 9) {
       return;
     }
 
@@ -152,7 +154,10 @@ export default class CMX3600Parser extends Transform {
     if (matches && matches.length > 3) {
       const [, reel, s, e] = matches;
       const speed = parseFloat(s);
-      if (this.currentEvent) this.currentEvent.motionEffect = { reel, speed, entryPoint: new Timecode(e) };
+
+      if (this.currentEvent) {
+        this.currentEvent.motionEffect = { reel, speed, entryPoint: new Timecode(e) };
+      }
     }
   }
 
@@ -162,19 +167,19 @@ export default class CMX3600Parser extends Transform {
   }
 
   private pushCurrentEventConditionally() {
-    if (Object.prototype.hasOwnProperty.call(this.currentEvent, 'number')) {
+    if (this.currentEvent.number) {
       this.push(this.currentEvent);
     }
   }
 
-  _transform(obj: string | Buffer, enc: string, callback = () => {}) {
+  _transform(obj: string | Buffer, enc: string, callback = () => {}): void {
     const line = typeof obj === 'string' ? obj : obj.toString();
 
-    if (line[0] === CMX_MOTION_EFFECT_LINE_BEGINNING) {
+    if (line.startsWith(CMX_MOTION_EFFECT_LINE_BEGINNING)) {
       this.parseMotionEffect(line);
-    } else if (line[0] === CMX_COMMENT_LINE_BEGINNING) {
+    } else if (line.startsWith(CMX_COMMENT_LINE_BEGINNING)) {
       this.parseComment(line);
-    } else if (line[0] === CMX_FRAME_RATE_LINE_BEGINNING) {
+    } else if (line.startsWith(CMX_FRAME_RATE_LINE_BEGINNING)) {
       this.changeFrameRate(line);
     } else if (CMX_EVENT_REGEX_LINE_BEGINNING.test(line)) {
       this.parseNextEvent(line);
@@ -183,7 +188,7 @@ export default class CMX3600Parser extends Transform {
     callback();
   }
 
-  _flush(callback = () => {}) {
+  _flush(callback = () => {}): void {
     this.pushCurrentEventConditionally();
     callback();
   }

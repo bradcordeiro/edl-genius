@@ -1,4 +1,6 @@
-import Timecode, { TimecodeAttributes } from 'timecode-boss';
+import Timecode from 'timecode-boss';
+
+import type { TimecodeAttributes } from 'timecode-boss';
 
 export interface MotionEffectAttributes {
   reel: string;
@@ -19,7 +21,7 @@ export default class MotionEffect implements MotionEffectAttributes {
     this.entryPoint = new Timecode(input.entryPoint || 0);
   }
 
-  toObject() : MotionEffectAttributes {
+  toObject(): MotionEffectAttributes {
     return {
       reel: this.reel,
       speed: this.speed,

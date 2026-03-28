@@ -1,6 +1,8 @@
 /* eslint-env mocha */
-import assert from 'assert';
+import assert from 'node:assert';
+
 import Timecode from 'timecode-boss';
+
 import MotionEffect from '../lib/MotionEffect.js';
 
 describe('Motion Effect', () => {
