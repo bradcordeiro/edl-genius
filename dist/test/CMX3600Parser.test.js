@@ -1,6 +1,4 @@
 /* eslint-env mocha */
-/* eslint-disable prefer-arrow-callback */
-/* eslint-disable func-names */
 import assert from 'node:assert';
 import { Readable } from 'node:stream';
 import CMX3600Parser from '../lib/CMX3600Parser.js';
@@ -75,7 +73,7 @@ function generateEventwithMotionEffectwithNegativeSpeed() {
 }
 describe('CMX3600Parser', () => {
     describe('Events', () => {
-        it('piping CMX 3600 string should parse to Event properties', function (done) {
+        it('piping CMX 3600 string should parse to Event properties', (done) => {
             const input = generateEvent();
             const output = new CMX3600Parser();
             const results = [];
@@ -122,7 +120,7 @@ describe('CMX3600Parser', () => {
             });
             input.pipe(output);
         });
-        it('piping CMX 3600 string should split track to type and number', function (done) {
+        it('piping CMX 3600 string should split track to type and number', (done) => {
             const input = generateAudioEvent();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -134,7 +132,7 @@ describe('CMX3600Parser', () => {
                 done();
             });
         });
-        it('piping CMX 3600 string should parse audio video tracks', function (done) {
+        it('piping CMX 3600 string should parse audio video tracks', (done) => {
             const input = generateAudioVideoEvent();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -147,7 +145,7 @@ describe('CMX3600Parser', () => {
         });
     });
     describe('Comments', () => {
-        it('piping CMX 3600 string should parse "* SOURCE FILE:" to a sourceFile property on Event', function (done) {
+        it('piping CMX 3600 string should parse "* SOURCE FILE:" to a sourceFile property on Event', (done) => {
             const input = generateEventwithSourceFile();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -158,7 +156,7 @@ describe('CMX3600Parser', () => {
                 done();
             });
         });
-        it('piping CMX 3600 string should parse "* FROM CLIP NAME:" to a sourceClip property on Event', function (done) {
+        it('piping CMX 3600 string should parse "* FROM CLIP NAME:" to a sourceClip property on Event', (done) => {
             const input = generateEventWithComments();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -169,7 +167,7 @@ describe('CMX3600Parser', () => {
                 done();
             });
         });
-        it('piping CMX 3600 string should parse "* Misc" to a comment property to Event', function (done) {
+        it('piping CMX 3600 string should parse "* Misc" to a comment property to Event', (done) => {
             const input = generateEventWithComments();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -181,7 +179,7 @@ describe('CMX3600Parser', () => {
                 done();
             });
         });
-        it('piping CMX 3600 string should parse "* TO CLIP NAME:" to transtionTo property', function (done) {
+        it('piping CMX 3600 string should parse "* TO CLIP NAME:" to transtionTo property', (done) => {
             const input = generateEventwithTransition();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -194,7 +192,7 @@ describe('CMX3600Parser', () => {
         });
     });
     describe('Motion Effects', () => {
-        it('Should get a reel', function (done) {
+        it('Should get a reel', (done) => {
             const input = generateEventwithMotionEffect();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -215,7 +213,7 @@ describe('CMX3600Parser', () => {
                 done();
             });
         });
-        it('Should get speed as a float', function (done) {
+        it('Should get speed as a float', (done) => {
             const input = generateEventwithMotionEffect();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -236,7 +234,7 @@ describe('CMX3600Parser', () => {
                 done();
             });
         });
-        it('Should correctly parse a negative speed', function (done) {
+        it('Should correctly parse a negative speed', (done) => {
             const input = generateEventwithMotionEffectwithNegativeSpeed();
             const output = new CMX3600Parser();
             input.pipe(output);
@@ -257,7 +255,7 @@ describe('CMX3600Parser', () => {
                 done();
             });
         });
-        it('Should get entryPoint as a Timecode object', function (done) {
+        it('Should get entryPoint as a Timecode object', (done) => {
             const input = generateEventwithMotionEffect();
             const output = new CMX3600Parser();
             input.pipe(output);
