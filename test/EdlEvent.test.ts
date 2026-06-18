@@ -3,11 +3,11 @@ import assert from 'node:assert';
 
 import Timecode from 'timecode-boss';
 
-import Event from '../lib/Event.js';
+import EdlEvent from '../lib/EdlEvent.js';
 
 describe('Event Class', () => {
   it('new Event() should create an empty event', () => {
-    const event = new Event();
+    const event = new EdlEvent();
 
     assert.strictEqual(event.number, undefined);
   });
@@ -24,7 +24,7 @@ describe('Event Class', () => {
       recordEnd: new Timecode('01:00:21:21'),
     };
 
-    const event = new Event(obj);
+    const event = new EdlEvent(obj);
 
     assert.strictEqual(event.number, obj.number);
     assert.strictEqual(event.reel, obj.reel);
@@ -37,7 +37,7 @@ describe('Event Class', () => {
   });
 
   it('new Event({Object}) with Timecode string properties should convert Timecode strings to Timecode class) ', () => {
-    const event = new Event({
+    const event = new EdlEvent({
       sourceStart: '01:01:43:05',
       sourceEnd: '01:01:57:00',
       recordStart: '01:00:07:26',
@@ -51,10 +51,10 @@ describe('Event Class', () => {
   });
 
   it('setMotionEffect() should add a motionEffect property', () => {
-    const event = new Event();
+    const event = new EdlEvent();
     event.setMotionEffect({ reel: 'KIRA_PAS', speed: 24.5, entryPoint: new Timecode('01:01:25:14') });
 
-    assert.deepEqual(event.motionEffect, {
+    assert.deepEqual(event.motionEffect?.toObject(), {
       reel: 'KIRA_PAS',
       speed: 24.5,
       entryPoint: {
@@ -68,7 +68,7 @@ describe('Event Class', () => {
   });
 
   it('toObject() should return an object with the correct properties', () => {
-    const event = new Event({
+    const event = new EdlEvent({
       number: 3,
       reel: 'BOONE_SM',
       trackType: 'V',

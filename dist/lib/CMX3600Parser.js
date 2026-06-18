@@ -12,6 +12,9 @@ const CMX_SOURCE_CLIP_REGEX = /^\*(?:\s+)?FROM CLIP NAME:\s+(.*)$/;
 const CMX_TO_CLIP_REGEX = /^\*(?:\s+)?TO CLIP NAME:\s+(.*)$/;
 const CMX_COMMENT_REGEX = /^\*(?:\s+)?(.*)$/;
 export default class CMX3600Parser extends Transform {
+    recordFrameRate;
+    sourceFrameRate;
+    currentEvent;
     constructor(recordFrameRate = 29.97) {
         super({ objectMode: true });
         this.currentEvent = {};

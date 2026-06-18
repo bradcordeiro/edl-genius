@@ -3,9 +3,9 @@ import { createInterface } from 'node:readline';
 import { Readable } from 'node:stream';
 
 import CMX3600Parser from './CMX3600Parser.js';
-import Event from './Event.js';
+import EdlEvent from './EdlEvent.js';
 
-import type { EventAttributes } from './Event.js';
+import type { EdlEventAttributes } from './EdlEvent.js';
 
 function getBasicStream(contents?: string | string[]) {
   if (Array.isArray(contents)) {
@@ -26,7 +26,7 @@ function getBasicStream(contents?: string | string[]) {
 export interface EditDecisionListAttributes {
   frameRate: number;
   type: string;
-  events: EventAttributes[];
+  events: EdlEventAttributes[];
 }
 
 export default class EditDecisionList implements EditDecisionListAttributes {
@@ -34,7 +34,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
 
   type: string;
 
-  events: Event[];
+  events: EdlEvent[];
 
   constructor(frameRate = 29.97, type = 'cmx3600') {
     this.frameRate = frameRate;
@@ -52,8 +52,8 @@ export default class EditDecisionList implements EditDecisionListAttributes {
 
   private async readStream(input: Readable): Promise<this> {
     const parser = this.getParser();
-    parser.on('data', (data: EventAttributes) => {
-      const event = new Event(data, data.sourceFrameRate, data.recordFrameRate);
+    parser.on('data', (data: EdlEventAttributes) => {
+      const event = new EdlEvent(data, data.sourceFrameRate, data.recordFrameRate);
       this.events.push(event);
     });
 
@@ -94,7 +94,7 @@ export default class EditDecisionList implements EditDecisionListAttributes {
   private async fromObject(obj: EditDecisionListAttributes): Promise<this> {
     this.frameRate = obj.frameRate;
     this.type = obj.type;
-    this.events = obj.events.map(((e) => new Event(e)));
+    this.events = obj.events.map(((e) => new EdlEvent(e)));
 
     return this;
   }

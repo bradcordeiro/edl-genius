@@ -2,7 +2,7 @@ import { Transform } from 'node:stream';
 
 import Timecode from 'timecode-boss';
 
-import type { EventAttributes } from './Event.js';
+import type { EdlEventAttributes } from './EdlEvent.js';
 
 const CMX_FRAME_RATE_LINE_BEGINNING = 'F';
 const CMX_MOTION_EFFECT_LINE_BEGINNING = 'M';
@@ -22,7 +22,7 @@ export default class CMX3600Parser extends Transform {
 
   private sourceFrameRate: number;
 
-  private currentEvent: EventAttributes;
+  private currentEvent: EdlEventAttributes;
 
   constructor(recordFrameRate = 29.97) {
     super({ objectMode: true });

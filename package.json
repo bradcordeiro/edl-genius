@@ -1,6 +1,6 @@
 {
   "name": "edl-genius",
-  "version": "4.2.5",
+  "version": "5.0.0",
   "description": "An ES6 module to work with Edit Decision Lists",
   "license": "MIT",
   "main": "./dist/index.js",
@@ -16,15 +16,16 @@
     "url": "http://www.bradc.com/"
   },
   "dependencies": {
-    "timecode-boss": "^6.2.0"
+    "timecode-boss": "^7.0.1"
   },
   "devDependencies": {
     "@eslint/compat": "^2.0.0",
     "@eslint/js": "^9.39.2",
     "@stylistic/eslint-plugin": "^3.1.0",
     "@tsconfig/node16": "^1.0.3",
+    "@tsconfig/node20": "^20.1.9",
     "@types/mocha": "^10.0.1",
-    "@types/node": "^17.0.18",
+    "@types/node": "^17.0.45",
     "eslint": "^9.39.2",
     "eslint-config-airbnb-extended": "^2.3.3",
     "eslint-import-resolver-typescript": "^4.4.4",

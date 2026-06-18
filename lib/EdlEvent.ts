@@ -2,19 +2,21 @@ import Timecode from 'timecode-boss';
 
 import MotionEffect from './MotionEffect.js';
 
+import type { ConvertibleToTimecode } from 'timecode-boss';
+
 import type { MotionEffectAttributes } from './MotionEffect.js';
 
-export interface EventAttributes {
+export interface EdlEventAttributes {
   number?: number;
   reel?: string;
   trackType?: string;
   trackNumber?: number;
   transition?: string;
   toClip?: string;
-  sourceStart?: ConstructorParameters<typeof Timecode>[0];
-  sourceEnd?: ConstructorParameters<typeof Timecode>[0];
-  recordStart?: ConstructorParameters<typeof Timecode>[0];
-  recordEnd?: ConstructorParameters<typeof Timecode>[0];
+  sourceStart?: ConvertibleToTimecode;
+  sourceEnd?: ConvertibleToTimecode;
+  recordStart?: ConvertibleToTimecode;
+  recordEnd?: ConvertibleToTimecode;
   sourceClip?: string;
   sourceFile?: string;
   motionEffect?: ConstructorParameters<typeof MotionEffect>[0];
@@ -23,7 +25,7 @@ export interface EventAttributes {
   recordFrameRate?: number;
 }
 
-export default class Event implements EventAttributes {
+export default class EdlEvent implements EdlEventAttributes {
   number?: number;
 
   reel?: string;
@@ -56,7 +58,7 @@ export default class Event implements EventAttributes {
 
   recordFrameRate?: number;
 
-  constructor(input: Partial<EventAttributes> = {}, sourceFrameRate = 29.97, recordFrameRate = 29.97) {
+  constructor(input: Partial<EdlEventAttributes> = {}, sourceFrameRate = 29.97, recordFrameRate = 29.97) {
     this.sourceFrameRate = sourceFrameRate;
     this.recordFrameRate = recordFrameRate;
     this.number = input.number;
@@ -79,7 +81,7 @@ export default class Event implements EventAttributes {
   }
 
   addComment(input: string): void {
-    const parsedComment: Pick<EventAttributes, 'comment' | 'sourceFile' | 'sourceClip'> = { comment: input };
+    const parsedComment: Pick<EdlEventAttributes, 'comment' | 'sourceFile' | 'sourceClip'> = { comment: input };
 
     if (parsedComment.sourceFile) {
       this.sourceFile = parsedComment.sourceFile;
@@ -92,7 +94,7 @@ export default class Event implements EventAttributes {
     }
   }
 
-  toObject(): EventAttributes {
+  toObject(): EdlEventAttributes {
     return {
       sourceFrameRate: this.sourceFrameRate,
       recordFrameRate: this.recordFrameRate,

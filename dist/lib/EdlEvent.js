@@ -1,6 +1,6 @@
 import Timecode from 'timecode-boss';
 import MotionEffect from './MotionEffect.js';
-export default class Event {
+export default class EdlEvent {
     number;
     reel;
     trackType;

@@ -2,7 +2,7 @@ import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { Readable } from 'node:stream';
 import CMX3600Parser from './CMX3600Parser.js';
-import Event from './Event.js';
+import EdlEvent from './EdlEvent.js';
 function getBasicStream(contents) {
     if (Array.isArray(contents)) {
         return new Readable({
@@ -18,6 +18,9 @@ function getBasicStream(contents) {
     });
 }
 export default class EditDecisionList {
+    frameRate;
+    type;
+    events;
     constructor(frameRate = 29.97, type = 'cmx3600') {
         this.frameRate = frameRate;
         this.type = type;
@@ -33,7 +36,7 @@ export default class EditDecisionList {
     async readStream(input) {
         const parser = this.getParser();
         parser.on('data', (data) => {
-            const event = new Event(data, data.sourceFrameRate, data.recordFrameRate);
+            const event = new EdlEvent(data, data.sourceFrameRate, data.recordFrameRate);
             this.events.push(event);
         });
         const rl = createInterface({
@@ -65,7 +68,7 @@ export default class EditDecisionList {
     async fromObject(obj) {
         this.frameRate = obj.frameRate;
         this.type = obj.type;
-        this.events = obj.events.map(((e) => new Event(e)));
+        this.events = obj.events.map(((e) => new EdlEvent(e)));
         return this;
     }
     async read(input) {

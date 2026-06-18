@@ -1,5 +1,8 @@
 import Timecode from 'timecode-boss';
 export default class MotionEffect {
+    reel;
+    speed;
+    entryPoint;
     constructor(input) {
         this.reel = input.reel || '';
         this.speed = input.speed || 0;

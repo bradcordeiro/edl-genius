@@ -1,15 +1,15 @@
 import { Readable } from 'node:stream';
-import Event from './Event.js';
-import type { EventAttributes } from './Event.js';
+import EdlEvent from './EdlEvent.js';
+import type { EdlEventAttributes } from './EdlEvent.js';
 export interface EditDecisionListAttributes {
     frameRate: number;
     type: string;
-    events: EventAttributes[];
+    events: EdlEventAttributes[];
 }
 export default class EditDecisionList implements EditDecisionListAttributes {
     frameRate: number;
     type: string;
-    events: Event[];
+    events: EdlEvent[];
     constructor(frameRate?: number, type?: string);
     private getParser;
     private readStream;

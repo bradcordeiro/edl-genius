@@ -5,7 +5,7 @@ import { Readable } from 'node:stream';
 
 import CMX3600Parser from '../lib/CMX3600Parser.js';
 
-import type { EventAttributes } from '../lib/Event.js';
+import type { EdlEventAttributes } from '../lib/EdlEvent.js';
 
 function getBasicStream(contents: string | string[]): Readable {
   if (Array.isArray(contents)) {
@@ -92,7 +92,7 @@ describe('CMX3600Parser', () => {
       const input = generateEvent();
       const output = new CMX3600Parser();
 
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -140,7 +140,7 @@ describe('CMX3600Parser', () => {
       const input = generateAudioEvent();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -155,7 +155,7 @@ describe('CMX3600Parser', () => {
       const input = generateAudioVideoEvent();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -171,7 +171,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithSourceFile();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -184,7 +184,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventWithComments();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -197,7 +197,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventWithComments();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -211,7 +211,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithTransition();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -226,7 +226,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -247,7 +247,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -268,7 +268,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffectwithNegativeSpeed();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
@@ -289,7 +289,7 @@ describe('CMX3600Parser', () => {
       const input = generateEventwithMotionEffect();
       const output = new CMX3600Parser();
       input.pipe(output);
-      const results: EventAttributes[] = [];
+      const results: EdlEventAttributes[] = [];
 
       output.on('data', (data) => results.push(data));
       output.on('end', () => {
