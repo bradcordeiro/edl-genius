@@ -23,7 +23,9 @@ export default class EdlEvent {
         this.number = input.number;
         this.reel = input.reel;
         this.trackType = input.trackType;
+        this.trackNumber = input.trackNumber;
         this.transition = input.transition;
+        this.toClip = input.toClip;
         this.sourceClip = input.sourceClip;
         this.sourceFile = input.sourceFile;
         this.comment = input.comment;
@@ -58,7 +60,9 @@ export default class EdlEvent {
             number: this.number,
             reel: this.reel,
             trackType: this.trackType,
+            trackNumber: this.trackNumber,
             transition: this.transition,
+            toClip: this.toClip,
             sourceStart: this.sourceStart.toObject(),
             sourceEnd: this.sourceEnd.toObject(),
             recordStart: this.recordStart.toObject(),
