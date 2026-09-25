@@ -77,6 +77,34 @@ describe('EditDecisionList Class', () => {
       assert.strictEqual(event.comment, 'GETTY IMAGES__QEVL1GRND130_UNDERGROUND_EL CHAPO TUNNELS_INTERIOR OF ALCATRAZ PRISON. ROW OF CELLS, CLOSE-UP OF CELL DOOR BARS, INSIDE OF JAIL CELL_180563302');
     });
 
+    it('Should preserve toClip from *TO CLIP NAME on transition events', async () => {
+      const edl = new EditDecisionList(24);
+      const cmx = `
+FCM: NON-DROP FRAME
+000002  REEL V     D    024 00:00:09:19 00:00:10:19 00:00:07:06 00:00:08:06
+*BLEND, DISSOLVE
+*FROM CLIP NAME:  10/10
+*TO CLIP NAME:  10/20
+000003  REEL V     C        00:00:10:19 00:00:14:21 00:00:08:06 00:00:12:08
+*FROM CLIP NAME:  10/20
+`.trim();
+      await edl.read(cmx);
+
+      const dissolve = edl.events.find((event) => event.transition === 'D');
+      assert.strictEqual(dissolve?.sourceClip, '10/10');
+      assert.strictEqual(dissolve?.toClip, '10/20');
+      assert.strictEqual(dissolve?.toObject().toClip, '10/20');
+    });
+
+    it('Should set toClip on cut events from *TO CLIP NAME', async () => {
+      const edl = new EditDecisionList(29.97);
+      await edl.readFile('./test/edl_files/cmx3600.edl');
+      const event = edl.events[3];
+
+      assert.strictEqual(event.toClip, 'BOONE SMITH ON CAMERA HOST_-720P.NEW.01');
+      assert.strictEqual(event.toObject().toClip, 'BOONE SMITH ON CAMERA HOST_-720P.NEW.01');
+    });
+
     it('Should accurately set source frameRates when encountering "FCM: XXX" in 29.97/30', async () => {
       const edl = new EditDecisionList(29.97);
       await edl.readFile('./test/edl_files/070816_EG101_HEISTS_ROUGH_CUT_SOURCES_PART 1.edl');

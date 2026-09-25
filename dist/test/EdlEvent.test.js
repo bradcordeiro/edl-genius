@@ -23,6 +23,8 @@ describe('Event Class', () => {
         assert.strictEqual(event.reel, obj.reel);
         assert.strictEqual(event.trackType, obj.trackType);
         assert.strictEqual(event.transition, obj.transition);
+        assert.strictEqual(event.trackNumber, undefined);
+        assert.strictEqual(event.toClip, undefined);
         assert.strictEqual(event.sourceStart.toString(), obj.sourceStart.toString());
         assert.strictEqual(event.sourceEnd.toString(), obj.sourceEnd.toString());
         assert.strictEqual(event.recordStart.toString(), obj.recordStart.toString());
@@ -54,6 +56,18 @@ describe('Event Class', () => {
                 frameRate: 29.97,
             },
         });
+    });
+    it('new Event({Object}) should copy toClip and trackNumber', () => {
+        const event = new EdlEvent({
+            trackNumber: 2,
+            transition: 'D',
+            toClip: 'CLIP_B.NEW.01',
+            sourceClip: 'CLIP_A.NEW.01',
+        });
+        assert.strictEqual(event.trackNumber, 2);
+        assert.strictEqual(event.toClip, 'CLIP_B.NEW.01');
+        assert.strictEqual(event.toObject().trackNumber, 2);
+        assert.strictEqual(event.toObject().toClip, 'CLIP_B.NEW.01');
     });
     it('toObject() should return an object with the correct properties', () => {
         const event = new EdlEvent({
